@@ -366,13 +366,12 @@ go("accueil");
 
 
 scene("contexte", ()=>{
-    //terre rouge -> mettre la terre en feu qui tourne comme background, en partant de transition du vert vers le rouge (corriger en pixel art manuellement ?)
 
     const dialogues = [
-        ["slime", "Hello toi! Regarde cette pauvre planète terre... Elle était si belle avant! (Appuye sur 'up' pour avancer) "],
+        ["slime", "Hello toi! Regarde cette pauvre planète terre... Elle était si belle avant!"],
         ["slime", "Si le rechauffement climatique continue à ce rythme, la terre va devenir invivable de façon définitive."],
         ["slime", "Pour l'instant, nous sommes encore à temps et chaque action compte! Avec ton aide et ton courage, nous pouvons déjà essayer d'intervenir dans un des domaines qui impacte le rechauffement climatique..."],
-        ["slime", "...la mobilité et les transports! (Appuie sur espace pour avancer)"],
+        ["slime", "...la mobilité et les transports!"],
     ]
 
     add([
@@ -427,11 +426,15 @@ scene("contexte", ()=>{
         
     ])
 
-    onKeyPress("up", () => {
-        // Cycle through the dialogs
-        curDialog = (curDialog + 1) % dialogues.length
-        updateDialog()
-        slime.play("parle")
+    onKeyPress("space", () => {
+        // Move to the next dialog if there are any left 
+        if (curDialog < dialogues.length - 1) {
+            curDialog++
+            updateDialog()
+            slime.play("parle")
+        } else {
+            go("explication")
+        }
     })
     
     // Update the on screen sprite & text
@@ -439,8 +442,8 @@ scene("contexte", ()=>{
     
         const [ char, dialog ] = dialogues[curDialog]
     
-        // Use a new sprite component to replace the old one
-        slime.use(sprite(char))
+        /*slime.use(sprite(char))*/
+
         // Update the dialog text
         txt.text = dialog
     
@@ -449,10 +452,6 @@ scene("contexte", ()=>{
     updateDialog()
 
     slime.play("parle")
-
-    onKeyPress("space", ()=>{
-        go("explication")
-    });
 
     makeCanvas({
         width:200,
@@ -511,48 +510,62 @@ scene("explication", ()=>{
         scale(4),
     ])
 
-    onKeyPress("up", () => {
-        // Cycle through the dialogs
-        curDialog = (curDialog + 1) % dialogues1.length;
-        updateDialog();
-        slime.play("parle");
+    onKeyPress("space", () => {
+        if (curDialog < dialogues1.length - 1) {
+            curDialog++
+            updateDialog()
+            slime.play("parle")
+        } else {
+            go("level0")
+        }
     })
     
     // Update the on screen sprite & text
     function updateDialog() {
-    
         const [ char, dialog ] = dialogues1[curDialog]
-    
         // Use a new sprite component to replace the old one
         slime.use(sprite(char))
         // Update the dialog text
         txt.text = dialog
-        add([
-            sprite("avion"),
-            scale(0.25),
-            pos(width()% 1/3, height()-20)
-        ])
-        add([
-            sprite("jetRouge")
-        ])
-        add([
-            sprite("jeepGris")
-        ])
-        add([
-            sprite("motoRouge")
-        ])
-        add([
-            sprite("voitureRose")
-        ])
+
+        // Remove existing objects before adding new ones
+        destroyAll("dynamicObject")
+
+        if (curDialog === 0) {
+            // Add objects for the first dialogue
+            add([
+                sprite("avion"),
+                scale(0.25),
+                pos(width() / 3, height() - 20),
+                "dynamicObject"
+            ])
+        } else if (curDialog === 1) {
+            // Add objects for the second dialogue
+            add([
+                sprite("jetRouge"),
+                "dynamicObject"
+            ])
+            add([
+                sprite("jeepGris"),
+                "dynamicObject"
+            ])
+        } else if (curDialog === 2) {
+            // Add objects for the third dialogue
+            add([
+                sprite("motoRouge"),
+                "dynamicObject"
+            ])
+            add([
+                sprite("voitureRose"),
+                "dynamicObject"
+            ])
+        }
     }
     
     updateDialog()
 
     slime.play("parle")
 
-    onKeyPress("space", ()=>{
-        go("level0")
-    });
 });
 
 scene("level0", ()=>{

@@ -1,0 +1,12 @@
+#game-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    
+  }
+  canvas {
+    border: 10px solid rgb(0, 0, 0);
+    margin: 5px;
+    border-radius: 30px;
+  }

@@ -8,7 +8,7 @@ function createCanvas(width, height) {
     const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
-    return canvas;
+    return canvas;  
   }
 
 const mainCanvas = createCanvas(640, 480);
@@ -466,7 +466,10 @@ scene("explication", ()=>{
     const dialogues1 = [
         ["slime", "Certains moyens de transports sont plus polluants que d'autres, alors que des alternatives sont disponibles pour une mobilité plus eco friendly!"],
         ["slime", "Tout d'abord, il y a les véhicules motorisés à usage individuel, pour lesquels d'autres choix sont souvent possibles!"],
-        ["slime", "Ensuite, pour les grands trajets, il est aussi possible de bouger plus lentement mais en polluant moins!"]
+        ["slime", "Ensuite, pour les grands trajets, il est aussi possible de bouger plus lentement mais en polluant moins!"],
+        ["slime", "Afin d'empecher l'explosion de la terre, tu dois detruire les exemples de mobilité négative!"],
+        ["slime", "Voici la liste de commandes: 'enter': fire; 'move left right'; tire sur les ennemis et évite les; tue le boss pour avancer de niveau; recupere les alliés pour reprendre des hp, mais si tu leur tire dessus tu va perdre des hp"]
+
     ]
 
     add([
@@ -531,34 +534,72 @@ scene("explication", ()=>{
         // Remove existing objects before adding new ones
         destroyAll("dynamicObject")
 
+        const baseX = (width()*2/4)
+        const baseY = height()/3
+
         if (curDialog === 0) {
             // Add objects for the first dialogue
-            add([
-                sprite("avion"),
-                scale(0.25),
-                pos(width() / 3, height() - 20),
-                "dynamicObject"
-            ])
+            
         } else if (curDialog === 1) {
             // Add objects for the second dialogue
             add([
-                sprite("jetRouge"),
-                "dynamicObject"
-            ])
-            add([
                 sprite("jeepGris"),
-                "dynamicObject"
-            ])
-        } else if (curDialog === 2) {
-            // Add objects for the third dialogue
-            add([
-                sprite("motoRouge"),
+                pos(width()/4, baseY - 30),
                 "dynamicObject"
             ])
             add([
                 sprite("voitureRose"),
+                pos(width()/4, baseY),
                 "dynamicObject"
             ])
+            add([
+                sprite("velo"),
+                pos(baseX, baseY - 30),
+                scale(0.25),
+                "dynamicObject"
+            ])
+            add([
+                sprite("busPublic"),
+                pos(baseX, baseY),
+                "dynamicObject"
+            ])
+            add([
+                sprite("pieton", {
+                    anim:"marche"
+                }),
+                pos(baseX, baseY + 30),
+                "dynamicObject"
+            ])
+            
+        } else if (curDialog === 2) {
+            // Add objects for the third dialogue
+            add([
+                sprite("avion"),
+                scale(0.25),
+                pos(width() / 4, baseY - 30),
+                "dynamicObject"
+            ])
+            add([
+                sprite("jetRouge"),
+                scale(0.30),
+                pos(width() / 4, baseY),
+                "dynamicObject"
+            ])
+            add([
+                sprite("locomotive"),
+                scale(0.3),
+                pos(baseX, baseY - 30),
+                "dynamicObject"
+            ])
+            add([
+                sprite("busPublic"),
+                pos(baseX, baseY),
+                "dynamicObject"
+            ])
+        } else if (curDialog === 3) {
+
+        } else if (curDialog ===4) {
+            
         }
     }
     

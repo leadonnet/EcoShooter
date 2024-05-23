@@ -116,13 +116,26 @@ loadSprite("slime", "spriteSlime.png", {
     }
 })
 
+loadSprite("explosion", "explosion.png", {
+    sliceX:10,
+    sliceY:1,
+    anims:{
+        go: {
+            from:9,
+            to:0,
+            speed: 1.5,
+            loop:true
+        }
+    }
+})
+
 loadSprite("healthBar", "healthBar.png", {
     sliceY: 12
 })
 
 
 //loader les sprite individuels de façon simplifiée, juste écrire le nom du fichier dans tableauSprites 
-const tableauSprites = ["voitureRose","voitureBleu","furgonGris","jeepGris","voitureAzur","voitureBlanche","voitureBordeau","voitureJaune","voitureNoire","voitureRouge","motoNoire","motoRouge","motoBleu","vanBleu","bullet1","bullet2","bullet3","bullet4","bullet5","bullet6","bullet7","bullet8","bullet9","bullet10","bullet11","busPublic", "avion", "helico", "jetRouge", "jetHelico", "locomotive", "vagon", "train", "velo", "jetR - Copie"]
+const tableauSprites = ["voitureRose","voitureBleu","furgonGris","jeepGris","voitureAzur","voitureBlanche","voitureBordeau","voitureJaune","voitureNoire","voitureRouge","motoNoire","motoRouge","motoBleu","vanBleu","bullet1","bullet2","bullet3","bullet4","bullet5","bullet6","bullet7","bullet8","bullet9","bullet10","bullet11","busPublic", "avion", "helico", "jetRouge", "jetHelico", "locomotive", "vagon", "train", "velo"]
 
 function chargerSprites(tableau){
     tableau.forEach(v =>{
@@ -783,13 +796,17 @@ scene("level0", ()=>{
             wait(rand(n * 0.1), () => {
                 for (let i = 0; i < 2; i++) {
                     add([
-                        pos(p.add(rand(vec2(-rad), vec2(rad)))),
-                        circle(4),
-                        scale(1 * size, 1 * size),
-                        lifespan(0.1),
-                        grow(rand(48, 72) * size),
+                        sprite("explosion", {
+                            anim:"go"
+                        }),
+                        pos(p.add(rand(vec2(-rad), vec2,(rad)))),
+                        //circle(4),
+                        //scale(1 * size, 1 * size),
+                        //lifespan(0.1),
+                        //grow(rand(48, 72) * size),
                         anchor("center"),
-                        color(0,128,0)
+                        color(0,128,0),
+                        console.log("ca marche")
                     ])
                 }
             })

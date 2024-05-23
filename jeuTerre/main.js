@@ -204,7 +204,9 @@ const backgrounds0 = [
     "assets/montagne10.jpeg",
     "assets/montagne11.jpeg",
     "assets/montagne12.jpeg",
-    "assets/montagne13.jpeg"
+    "assets/montagne13.jpeg",
+    "assets/montagne14.jpeg",
+    "assets/montagne15.jpeg",
 ]
 
 //LEVEL1
@@ -368,7 +370,7 @@ go("accueil");
 scene("contexte", ()=>{
 
     const dialogues = [
-        ["slime", "Hello toi! Regarde cette pauvre planète terre... Elle était si belle avant!"],
+        ["slime", "Hello toi! Regarde cette pauvre planète terre... Elle était si belle avant les effets du rechauffement climatique!"],
         ["slime", "Si le rechauffement climatique continue à ce rythme, la terre va devenir invivable de façon définitive."],
         ["slime", "Pour l'instant, nous sommes encore à temps et chaque action compte! Avec ton aide et ton courage, nous pouvons déjà essayer d'intervenir dans un des domaines qui impacte le rechauffement climatique..."],
         ["slime", "...la mobilité et les transports!"],
@@ -422,7 +424,7 @@ scene("contexte", ()=>{
         }),
         anchor("center"),
         pos(center().x, 440),
-        scale(4),
+        scale(5.5),
         
     ])
 
@@ -510,7 +512,7 @@ scene("explication", ()=>{
         }),
         anchor("center"),
         pos(center().x, 440),
-        scale(4),
+        scale(5.5),
     ])
 
     onKeyPress("space", () => {

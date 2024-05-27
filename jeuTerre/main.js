@@ -148,7 +148,7 @@ loadSprite("heart", "heart.png", {
 
 
 //loader les sprite individuels de façon simplifiée, juste écrire le nom du fichier dans tableauSprites 
-const tableauSprites = ["voitureRose","voitureBleu","furgonGris","jeepGris","voitureAzur","voitureBlanche","voitureBordeau","voitureJaune","voitureNoire","voitureRouge","motoNoire","motoRouge","motoBleu","vanBleu","bullet1","bullet2","bullet3","bullet4","bullet5","bullet6","bullet7","bullet8","bullet9","bullet10","bullet11","busPublic", "avion", "helico", "jetRouge", "jetHelico", "locomotive", "vagon", "train", "velo"]
+const tableauSprites = ["voitureRose","voitureBleu","furgonGris","jeepGris","voitureAzur","voitureBlanche","voitureBordeau","voitureJaune","voitureNoire","voitureRouge","motoNoire","motoRouge","motoBleu","vanBleu","bullet1","bullet2","bullet3","bullet4","bullet5","bullet6","bullet7","bullet8","bullet9","bullet10","bullet11","busPublic", "avion", "helico", "jetRouge", "jetHelico", "locomotive", "vagon", "train", "velo", "objetsNeg1", "objetsNeg2", "objetsPos1", "objetsPos2", "commandes"]
 
 function chargerSprites(tableau){
     tableau.forEach(v =>{
@@ -187,7 +187,7 @@ loadSprite("bullet11", "bullet11.png");*/
 
 loadSprite("generalBackground", "generalBackground.png")
 
-loadFont("pixelifySans", "assets/static/PixelifySans-Regular.ttf")
+
 
 loadFont("superPixel", "assets/SuperPixel-m2L8j.ttf")
 
@@ -239,9 +239,9 @@ const backgrounds0 = [
 const backgrounds1 = [
     "assets/ville0.jpeg",
     "assets/ville1.jpeg",
-    "assets/ville2.jpeg",
+    //"assets/ville2.jpeg",
     "assets/ville3.jpeg",
-    "assets/ville3A.jpeg",
+    //"assets/ville3A.jpeg",
     "assets/ville3B.jpeg",
     "assets/ville4.jpeg",
     "assets/ville4A.jpeg",
@@ -272,7 +272,7 @@ const objsAlly1 = [
 backgrounds2 = [
     "assets/industrie1.jpeg",
     "assets/industrie2.jpeg",
-    "assets/industrie3.jpeg",
+    //"assets/industrie3.jpeg",
     "assets/industrie4.jpeg",
     "assets/industrie5.jpeg",
     "assets/industrie6.jpeg",
@@ -297,9 +297,9 @@ const objsTrash2 = [
 
 const backgrounds3 = [
     "assets/campagne1.jpeg",
-    "assets/campagne2.jpeg",
+    //"assets/campagne2.jpeg",
     "assets/campagne3.jpeg",
-    "assets/campagne4.jpeg",
+    //"assets/campagne4.jpeg",
     "assets/campagne5.jpeg",
     "assets/campagne6.jpeg",
     "assets/campagne7.jpeg",
@@ -496,7 +496,7 @@ scene("explication", ()=>{
         ["slime", "Tout d'abord, il y a les véhicules motorisés à usage individuel, pour lesquels d'autres choix sont souvent possibles!"],
         ["slime", "Ensuite, pour les grands trajets, il est aussi possible de bouger plus lentement mais en polluant moins!"],
         ["slime", "Afin d'empecher l'explosion de la terre, tu dois detruire les exemples de mobilité négative!"],
-        ["slime", "Voici la liste de commandes: 'enter': fire; 'move left right'; tire sur les ennemis et évite les; tue le boss pour avancer de niveau; recupere les alliés pour reprendre des hp, mais si tu leur tire dessus tu va perdre des hp"]
+        ["slime", "Voici la liste de commandes. Tue le boss et tous les ennemis, mais évite les alliés!"]
 
     ]
 
@@ -571,63 +571,73 @@ scene("explication", ()=>{
         } else if (curDialog === 1) {
             // Add objects for the second dialogue
             add([
-                sprite("jeepGris"),
-                pos(width()/4, baseY - 30),
+                sprite("objetsNeg1"),
+                pos(width()/4 - 60, baseY - 120),
+                scale(2.5),
                 "dynamicObject"
             ])
             add([
-                sprite("voitureRose"),
-                pos(width()/4, baseY),
-                "dynamicObject"
-            ])
-            add([
-                sprite("velo"),
-                pos(baseX, baseY - 30),
-                scale(0.25),
-                "dynamicObject"
-            ])
-            add([
-                sprite("busPublic"),
-                pos(baseX, baseY),
-                "dynamicObject"
-            ])
-            add([
-                sprite("pieton", {
-                    anim:"marche"
-                }),
-                pos(baseX, baseY + 30),
+                sprite("objetsPos1"),
+                pos(baseX - 20, baseY - 123),
+                scale(2.30),
                 "dynamicObject"
             ])
             
         } else if (curDialog === 2) {
             // Add objects for the third dialogue
             add([
-                sprite("avion"),
-                scale(0.25),
-                pos(width() / 4, baseY - 30),
+                sprite("objetsNeg2"),
+                pos(width() / 4 - 60, baseY - 120),
+                scale(2.5),
                 "dynamicObject"
             ])
             add([
-                sprite("jetRouge"),
-                scale(0.30),
-                pos(width() / 4, baseY),
+                sprite("objetsPos2"),
+                pos(baseX -20, baseY - 123),
+                scale(2.30),
                 "dynamicObject"
             ])
-            add([
-                sprite("locomotive"),
-                scale(0.3),
-                pos(baseX, baseY - 30),
-                "dynamicObject"
-            ])
-            add([
-                sprite("busPublic"),
-                pos(baseX, baseY),
-                "dynamicObject"
-            ])
+           
+           
         } else if (curDialog === 3) {
+            add([
+                sprite("objetsNeg1"),
+                pos(width()/4 - 60, baseY - 120),
+                scale(2.5),
+                "dynamicObject"
+            ])
+            add([
+                sprite("objetsNeg2"),
+                pos(baseX - 30, baseY - 120),
+                scale(2.5),
+                "dynamicObject"
+            ])
 
         } else if (curDialog ===4) {
-            
+            //mettre ici sprite de liste des commandes 
+            add([
+                sprite("commandes"),
+                pos(width()/4 - 90, baseY - 250),
+                scale(5),
+                "dynamicObject"
+            ]);
+            add([
+                text("tirer", {
+                    font:"superPixel",
+                    size: 30,
+                    align:"center"
+                }),
+                pos(baseX + 26, baseY - 100)
+
+            ]);
+            add([
+                text("bouger", {
+                    font: "superPixel",
+                    size:30,
+                    align: "center"
+                }),
+                pos(baseX + 26, baseY)
+            ])
         }
     }
     
@@ -824,7 +834,7 @@ scene("level0", ()=>{
                         lifespan(0.1),
                         grow(rand(48, 72) * size),
                         anchor("center"),
-                        color(0,128,0),
+                        color(0,128,0,150),
                     ])
                 }
             })
@@ -993,6 +1003,7 @@ scene("level0", ()=>{
         destroy(b)
         e.hurt(insaneMode ? 10 : 1)
         player.hurt(10)
+        addExplode(b.pos, 1, 24, 1)
     })
 
     onUpdate("ally", (t) => {
@@ -1099,6 +1110,7 @@ scene("level0", ()=>{
         wait(1, () => {
             //music.paused = true
         });
+        addExplode(player.pos, 1, 24, 1)
     })
 
     player.onHurt(() => {
@@ -1214,7 +1226,7 @@ scene("level1", ()=>{
     const MAX_TRASH = 5;
     const MAX_ALLY = 3
 
-    const healthPoints = [100, 90, 80, 70, 60, 50, 40, 30, 25, 20, 15, 10, 5, 1]
+    const healthPoints = [100, 90, 80, 70, 60, 50, 40, 30, 25, 20, 15, 10]
 
     const bossName = choose(objsTrash1)
 
@@ -1547,6 +1559,7 @@ scene("level1", ()=>{
         destroy(b)
         e.hurt(insaneMode ? 10 : 1)
         player.hurt(10)
+        addExplode(b.pos, 1, 24, 1)
     })
 
     onUpdate("ally", (t) => {
@@ -1584,7 +1597,7 @@ scene("level1", ()=>{
 
     const bossHealthbar = add([
         sprite("healthBar", { frame: 0 }), // Start with the first frame (full health)
-        pos(width() - 55, 450), // Adjust position as needed
+        pos(width() - 55, 450), 
         scale(3), 
         rotate(270),
         fixed(),
@@ -1651,6 +1664,7 @@ scene("level1", ()=>{
         wait(1, () => {
             //music.paused = true
         });
+        addExplode(player.pos, 1, 24, 1)
     })
 
     player.onHeal(() => {
@@ -1751,7 +1765,7 @@ scene("level2", ()=>{
     const MAX_TRASH = 5;
     const MAX_ALLY = 3
 
-    const healthPoints = [100, 90, 80, 70, 60, 50, 40, 35, 30, 25, 20, 15, 10, 5, 1]
+    const healthPoints = [100, 95, 90, 80, 70, 60, 50, 40, 35, 30, 25, 20, 15, 10]
 
     const bossName = choose(objsTrash2)
 
@@ -2085,6 +2099,7 @@ scene("level2", ()=>{
         destroy(b)
         e.hurt(insaneMode ? 10 : 1)
         player.hurt(10)
+        addExplode(b.pos, 1, 24, 1)
     })
 
     onUpdate("trash", (t) => {
@@ -2190,6 +2205,7 @@ scene("level2", ()=>{
         wait(1, () => {
             //music.paused = true
         });
+        addExplode(player.pos, 1, 24, 1)
     })
 
     const playerHealthbar = add([
@@ -2279,11 +2295,13 @@ scene("level3", () => {
     const BOSS_HEALTH = 10
     const OBJ_HEALTH = 1
     const OBJ_ALLY_HEALTH = 10
-    const PLAYER_HEALTH = 150
+    const PLAYER_HEALTH = 130
     const MAX_TRASH = 5;
     const MAX_ALLY = 3
+    const CROSS_LIMIT = 2
+    const DISAPPEAR_DURATION = 4
 
-    const healthPoints = [100, 90, 80, 70, 60, 50, 40, 35, 30, 25, 20, 15, 10, 5, 1]
+    const healthPoints = [100, 90, 80, 70, 60, 50, 40, 35, 30, 25, 20, 15, 10]
 
     const bossName = choose(objsTrash3)
 
@@ -2538,40 +2556,51 @@ scene("level3", () => {
         },
     ])
 
-    /*if(bossName =="jetHelico") {
-        sprite("avion")
-        bossName == "avion"
-    }*/
-
-    /*if (bossName =="jetHelico") {
-        scale(0)
-        console.log("blabla")
-        De base le jetHelico apparait si il a un scale(0.5), mais avec le scale 1.2 il n'apparait pas, même si je diminue ici dans un if le scale, alors que le console.log apparait dans console
-    }*/
-
     const trainAlly = add([
         sprite("train"),
         area(),
-        pos(width() / 2, 190),
+        pos(width() / 2, 230),
         health(OBJ_ALLY_HEALTH),
-        scale(0.5),
+        scale(0.35),
         anchor("top"),
         "ally",
         {
             dir: 1,
+            crossCount: 0
         },
     ]);
 
     trainAlly.onUpdate((p) => {
-        trainAlly.move(TRASH_SPEED * trainAlly.dir * (insaneMode ? 3 : 1), 0)
-        if (trainAlly.dir === 1 && trainAlly.pos.x >= width() - 20) {
-            trainAlly.dir = -1
-            trainAlly.flipX = false
+        if (!trainAlly.hidden) {
+            trainAlly.move(TRASH_SPEED * trainAlly.dir * (insaneMode ? 3 : 1), 0)
+
+            //controle si le train a été vers la droite
+            if (trainAlly.dir === 1 && trainAlly.pos.x >= width() - 20) {
+                trainAlly.dir = -1
+                trainAlly.flipX = false
+                trainAlly.crossCount++
+            }
+
+            //controle si le train a été vers la gauche
+            if (trainAlly.dir === -1 && trainAlly.pos.x <= 20) {
+                trainAlly.dir = 1
+                trainAlly.flipX = true
+                trainAlly.crossCount++
+            }
+
+            //controle si le train a deja traversé l'écran 3 fois, et le faire disparaitre
+            if (trainAlly.crossCount >= CROSS_LIMIT) {
+                trainAlly.hidden = true; // Hide the train
+                trainAlly.crossCount = 0 //reset the cross counter 
+                wait(DISAPPEAR_DURATION, () => {
+                    trainAlly.hidden = false; // Reappear the train
+                    trainAlly.pos.x = width() / 2; // Reset position (optional)
+                    trainAlly.dir = -1 //start moving left again
+                    trainAlly.flipX = false
+                });
+            }
         }
-        if (trainAlly.dir === -1 && trainAlly.pos.x <= 20) {
-            trainAlly.dir = 1
-            trainAlly.flipX = true
-        }
+        
     })
 
     on("death", "enemy", (e) => {
@@ -2626,6 +2655,7 @@ scene("level3", () => {
         destroy(b)
         e.hurt(insaneMode ? 10 : 1)
         player.hurt(10)
+        addExplode(b.pos, 1, 24, 1)
     })
 
     onUpdate("trash", (t) => {
@@ -2732,6 +2762,7 @@ scene("level3", () => {
         wait(1, () => {
             //music.paused = true
         });
+        addExplode(player.pos, 1, 24, 1)
     })
 
     const playerHealthbar = add([
@@ -2811,9 +2842,20 @@ scene("win", ()=>{
         pos(0,0),
         fixed()
     ]);
+
+    const terreTournante = add([
+        sprite("terre", {
+            //comportement de l'objet terre, qui doit avoir le sprite avec caractéristique de l'animation "tourne"
+            anim: "tourne",
+            width: 300,
+            height: 300,
+        }),
+        anchor("center"),
+        pos(center())
+    ]);
     
     add([
-        text("TU A GAGNÉ!", {
+        text("TU AS GAGNÉ!", {
             font:"superPixel"
         }),
         anchor("center"),
@@ -2847,6 +2889,16 @@ scene("gameOver", ()=>{
         fixed()
     ])
 
+    const terreTournanteRouge = add([
+        sprite("terreRouge", {
+            anim: "tourneRouge",
+            width: 300,
+            height: 300,
+        }),
+        anchor("center"),
+        pos(center())
+    ]);
+
     add([
         text("TU AS PERDU!", {
             font:"superPixel"
@@ -2871,4 +2923,4 @@ scene("gameOver", ()=>{
     });
 });
 
-debug.inspect = true
+//debug.inspect = true

@@ -116,7 +116,7 @@ loadSprite("slime", "spriteSlime.png", {
     }
 })
 
-loadSprite("explosion", "explosion.png", {
+/*loadSprite("explosion", "explosion.png", {
     sliceX:10,
     sliceY:1,
     anims:{
@@ -127,10 +127,23 @@ loadSprite("explosion", "explosion.png", {
             loop:true
         }
     }
-})
+})*/
 
 loadSprite("healthBar", "healthBar.png", {
     sliceY: 12
+})
+
+loadSprite("heart", "heart.png", {
+    sliceX: 4,
+    sliceY: 1,
+    anims: {
+        tourne: {
+            from:0,
+            to:3,
+            speed: 1.5,
+            loop: true
+        },
+    },
 })
 
 
@@ -642,13 +655,13 @@ scene("level0", ()=>{
     const healthPoints = [100, 90, 80, 70, 60, 50, 30, 25, 20, 15, 10, 5, 1]
 
     const BULLET_SPEED = 800
-    const TRASH_SPEED = 80
+    const TRASH_SPEED = 60
     const BOSS_SPEED = 48
     const PLAYER_SPEED = 480
     const BOSS_HEALTH = 10
     const OBJ_HEALTH = 1
     const PLAYER_HEALTH = 100
-    const MAX_TRASH = 7;
+    const MAX_TRASH = 5;
     const MAX_ALLY = 3
 
     const bossName = choose(objsTrash0)
@@ -686,7 +699,10 @@ scene("level0", ()=>{
     }
 
     add([
-        text("KILL", { size: 160 }),
+        text("KILL", { 
+            size: 160,
+            font: "superPixel"
+        }),
         pos(width() / 2, height() / 2),
         anchor("center"),
         lifespan(1),
@@ -694,7 +710,10 @@ scene("level0", ()=>{
     ])
 
     add([
-        text("THE", { size: 80 }),
+        text("THE", { 
+            size: 80,
+            font: "superPixel"
+        }),
         pos(width() / 2, height() / 2),
         anchor("center"),
         lifespan(2),
@@ -703,7 +722,10 @@ scene("level0", ()=>{
     ])
 
     add([
-        text(bossName.toUpperCase(), { size: 120 }),
+        text(bossName.toUpperCase(), { 
+            size: 60,
+            font: "superPixel"
+        }),
         pos(width() / 2, height() / 2),
         anchor("center"),
         lifespan(4),
@@ -796,17 +818,13 @@ scene("level0", ()=>{
             wait(rand(n * 0.1), () => {
                 for (let i = 0; i < 2; i++) {
                     add([
-                        sprite("explosion", {
-                            anim:"go"
-                        }),
                         pos(p.add(rand(vec2(-rad), vec2,(rad)))),
-                        //circle(4),
-                        //scale(1 * size, 1 * size),
-                        //lifespan(0.1),
-                        //grow(rand(48, 72) * size),
+                        circle(4),
+                        scale(1 * size, 1 * size),
+                        lifespan(0.1),
+                        grow(rand(48, 72) * size),
                         anchor("center"),
                         color(0,128,0),
-                        console.log("ca marche")
                     ])
                 }
             })
@@ -867,8 +885,10 @@ scene("level0", ()=>{
     }
 
     //fonction qui ajoute les trucs qui tombent du ciel, qui sont appelés Trash dans le code 
+    let offscreenTrashCount = 0;  // Counter for offscreen trash
+
     function spawnTrash() {
-        //console.log("Nombre de gameObject 'trash' disponibles: ", get("trash", 0.1).length);
+        // Ensure there are always MAX_TRASH trash objects
         while (get("trash").length < MAX_TRASH) {
             const name = choose(objsTrash0.filter(n => n != bossName));
             add([
@@ -877,16 +897,29 @@ scene("level0", ()=>{
                 pos(rand(0, width()), 0),
                 health(OBJ_HEALTH),
                 anchor("bot"),
-                scale(1/2),
+                scale(1 / 2),
                 "trash",
                 "enemy",
                 { speed: rand(TRASH_SPEED * 0.5, TRASH_SPEED * 1.5) },
-                offscreen({ destroy: true }),
+                { offscreenChecked: false }  // Custom property to track if offscreen check has been done
             ]);
         }
-
-        wait(SPAWN_INTERVAL, spawnTrash)
-    }
+    
+        wait(SPAWN_INTERVAL, spawnTrash);
+    };
+    loop(1, () => {
+        get("trash").forEach((t) => {
+            if (t.pos.y > height() && !t.offscreenChecked) {
+                offscreenTrashCount++;
+                t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
+                destroy(t);  // Destroy the trash object
+                console.log("Trash went offscreen. Current count:", offscreenTrashCount);
+                if (offscreenTrashCount > 3) {
+                    go("gameOver");
+                }
+            }
+        });
+    });
 
     const boss = add([
         sprite(bossName),
@@ -930,7 +963,9 @@ scene("level0", ()=>{
 
 
     const timer = add([
-        text(0),
+        text(0, {
+            font: "superPixel"
+        }),
         pos(25, 32),
         fixed(),
         { time: 0 },
@@ -1013,7 +1048,10 @@ scene("level0", ()=>{
     ]);
     
     add([
-        text(`hp de ${bossName}`),
+        text(`hp de ${bossName}`, {
+            font: "superPixel"
+        }
+        ),
         pos(width() - 55, 60),
         fixed(),
         rotate(90)
@@ -1029,31 +1067,12 @@ scene("level0", ()=>{
         }
     });
 
-    /*const bossHealthbar = add([
-        rect(24, height()),
-        pos(width() - 24 , 0),
-        color(107, 201, 108),
-        fixed(),
-        {
-            max: BOSS_HEALTH,
-            set(hp) {
-                this.height = height() * hp / this.max
-                this.flash = true
-            },
-        },
-    ])
-
-    bossHealthbar.onUpdate(() => {
-        if (bossHealthbar.flash) {
-            bossHealthbar.color = rgb(255, 255, 255)
-            bossHealthbar.flash = false
-        } else {
-            bossHealthbar.color = rgb(127, 255, 127) 
-        }
-    })*/
-
     add([
-        text("UP: insane mode", { width: width() / 2, size: 32 }),
+        text("UP: insane mode", { 
+            width: width() / 2, 
+            size: 32,
+            font: "superPixel" 
+        }),
         anchor("botleft"),
         pos(24, height() - 24),
     ])
@@ -1084,7 +1103,7 @@ scene("level0", ()=>{
 
     player.onHurt(() => {
         playerHealthbar.set(player.hp())
-        console.log(player.hp())
+        //console.log(player.hp())
     });
 
     player.onDeath(() => {
@@ -1094,7 +1113,7 @@ scene("level0", ()=>{
 
     player.onHeal(() => {
         playerHealthbar.set(player.hp())
-        console.log(player.hp())
+        //console.log(player.hp())
     })
 
     const playerHealthbar = add([
@@ -1186,13 +1205,13 @@ scene("level1", ()=>{
     ])
 
     const BULLET_SPEED = 800
-    const TRASH_SPEED = 80
+    const TRASH_SPEED = 60
     const BOSS_SPEED = 48
     const PLAYER_SPEED = 480
     const BOSS_HEALTH = 10
     const OBJ_HEALTH = 1
     const PLAYER_HEALTH = 100
-    const MAX_TRASH = 7;
+    const MAX_TRASH = 5;
     const MAX_ALLY = 3
 
     const healthPoints = [100, 90, 80, 70, 60, 50, 40, 30, 25, 20, 15, 10, 5, 1]
@@ -1232,7 +1251,10 @@ scene("level1", ()=>{
     }
 
     add([
-        text("KILL", { size: 160 }),
+        text("KILL", { 
+            size: 160,
+            font: "superPixel" 
+        }),
         pos(width() / 2, height() / 2),
         anchor("center"),
         lifespan(1),
@@ -1240,7 +1262,10 @@ scene("level1", ()=>{
     ])
 
     add([
-        text("THE", { size: 80 }),
+        text("THE", { 
+            size: 80,
+            font: "superPixel"
+        }),
         pos(width() / 2, height() / 2),
         anchor("center"),
         lifespan(2),
@@ -1249,7 +1274,10 @@ scene("level1", ()=>{
     ])
 
     add([
-        text(bossName.toUpperCase(), { size: 120 }),
+        text(bossName.toUpperCase(), { 
+            size: 60,
+            font: "superPixel" 
+        }),
         pos(width() / 2, height() / 2),
         anchor("center"),
         lifespan(4),
@@ -1409,11 +1437,12 @@ scene("level1", ()=>{
         }
         wait(SPAWN_INTERVAL, spawnAlly)
     }
-    
 
     //fonction qui ajoute les trucs qui tombent du ciel, qui sont appelés Trash dans le code 
+    let offscreenTrashCount = 0;  // Counter for offscreen trash
+
     function spawnTrash() {
-        //console.log("Nombre de gameObject 'trash' disponibles: ", get("trash", 0.1).length);
+        // Ensure there are always MAX_TRASH trash objects
         while (get("trash").length < MAX_TRASH) {
             const name = choose(objsTrash1.filter(n => n != bossName));
             add([
@@ -1426,12 +1455,25 @@ scene("level1", ()=>{
                 "trash",
                 "enemy",
                 { speed: rand(TRASH_SPEED * 0.5, TRASH_SPEED * 1.5) },
-                offscreen({ destroy: true }),
+                { offscreenChecked: false }  // Custom property to track if offscreen check has been done
             ]);
         }
-
-        wait(SPAWN_INTERVAL, spawnTrash)
-    }
+    
+        wait(SPAWN_INTERVAL, spawnTrash);
+    };
+    loop(1, () => {
+        get("trash").forEach((t) => {
+            if (t.pos.y > height() && !t.offscreenChecked) {
+                offscreenTrashCount++;
+                t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
+                destroy(t);  // Destroy the trash object
+                console.log("Trash went offscreen. Current count:", offscreenTrashCount);
+                if (offscreenTrashCount > 3) {
+                    go("gameOver");
+                }
+            }
+        });
+    });
 
     const boss = add([
         sprite(bossName),
@@ -1475,7 +1517,9 @@ scene("level1", ()=>{
 
 
     const timer = add([
-        text(0),
+        text(0, {
+            font: "superPixel"
+        }),
         pos(25, 32),
         fixed(),
         { time: 0 },
@@ -1558,14 +1602,20 @@ scene("level1", ()=>{
     ]);
     
     add([
-        text(`hp de ${bossName}`),
+        text(`hp de ${bossName}`, {
+            font: "superPixel"
+        }),
         pos(width() - 55, 60),
         fixed(),
         rotate(90)
     ])
 
     add([
-        text("UP: insane mode", { width: width() / 2, size: 32 }),
+        text("UP: insane mode", { 
+            width: width() / 2, 
+            size: 32,
+            font: "superPixel"
+        }),
         anchor("botleft"),
         pos(24, height() - 24),
     ])
@@ -1691,14 +1741,14 @@ scene("level2", ()=>{
     ])
 
     const BULLET_SPEED = 800
-    const TRASH_SPEED = 80
+    const TRASH_SPEED = 60
     const BOSS_SPEED = 48
     const PLAYER_SPEED = 480
     const BOSS_HEALTH = 10
     const OBJ_HEALTH = 1
     const OBJ_ALLY_HEALTH = 10
     const PLAYER_HEALTH = 100
-    const MAX_TRASH = 7;
+    const MAX_TRASH = 5;
     const MAX_ALLY = 3
 
     const healthPoints = [100, 90, 80, 70, 60, 50, 40, 35, 30, 25, 20, 15, 10, 5, 1]
@@ -1738,7 +1788,10 @@ scene("level2", ()=>{
     }
 
     add([
-        text("KILL", { size: 160 }),
+        text("KILL", { 
+            size: 160,
+            font: "superPixel"
+         }),
         pos(width() / 2, height() / 2),
         anchor("center"),
         lifespan(1),
@@ -1746,7 +1799,10 @@ scene("level2", ()=>{
     ])
 
     add([
-        text("THE", { size: 80 }),
+        text("THE", { 
+            size: 80,
+            font: "superPixel"
+         }),
         pos(width() / 2, height() / 2),
         anchor("center"),
         lifespan(2),
@@ -1755,7 +1811,10 @@ scene("level2", ()=>{
     ])
 
     add([
-        text(bossName.toUpperCase(), { size: 120 }),
+        text(bossName.toUpperCase(), { 
+            size: 60,
+            font: "superPixel"
+         }),
         pos(width() / 2, height() / 2),
         anchor("center"),
         lifespan(4),
@@ -1898,8 +1957,10 @@ scene("level2", ()=>{
     const SPAWN_INTERVAL = insaneMode ? 0.1 : 0.3;
 
     //fonction qui ajoute les trucs qui tombent du ciel, qui sont appelés Trash dans le code 
+    let offscreenTrashCount = 0;  // Counter for offscreen trash
+
     function spawnTrash() {
-        //console.log("Nombre de gameObject 'trash' disponibles: ", get("trash", 0.1).length);
+        // Ensure there are always MAX_TRASH trash objects
         while (get("trash").length < MAX_TRASH) {
             const name = choose(objsTrash2.filter(n => n != bossName));
             add([
@@ -1912,12 +1973,25 @@ scene("level2", ()=>{
                 "trash",
                 "enemy",
                 { speed: rand(TRASH_SPEED * 0.5, TRASH_SPEED * 1.5) },
-                offscreen({ destroy: true }),
+                { offscreenChecked: false }  // Custom property to track if offscreen check has been done
             ]);
         }
-
-        wait(SPAWN_INTERVAL, spawnTrash)
-    }
+    
+        wait(SPAWN_INTERVAL, spawnTrash);
+    };
+    loop(1, () => {
+        get("trash").forEach((t) => {
+            if (t.pos.y > height() && !t.offscreenChecked) {
+                offscreenTrashCount++;
+                t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
+                destroy(t);  // Destroy the trash object
+                console.log("Trash went offscreen. Current count:", offscreenTrashCount);
+                if (offscreenTrashCount > 3) {
+                    go("gameOver");
+                }
+            }
+        });
+    });
 
     const boss = add([
         sprite(bossName),
@@ -1988,7 +2062,9 @@ scene("level2", ()=>{
 
 
     const timer = add([
-        text(0),
+        text(0, {
+            font: "superPixel"
+        }),
         pos(25, 32),
         fixed(),
         { time: 0 },
@@ -2064,14 +2140,20 @@ scene("level2", ()=>{
     ]);
     
     add([
-        text(`hp de ${bossName}`),
+        text(`hp de ${bossName}`, {
+            font: "superPixel"
+        }),
         pos(width() - 55, 60),
         fixed(),
         rotate(90)
     ])
 
     add([
-        text("UP: insane mode", { width: width() / 2, size: 32 }),
+        text("UP: insane mode", { 
+            width: width() / 2, 
+            size: 32,
+            font: "superPixel"
+         }),
         anchor("botleft"),
         pos(24, height() - 24),
     ])
@@ -2191,14 +2273,14 @@ scene("level3", () => {
     ])
 
     const BULLET_SPEED = 800
-    const TRASH_SPEED = 80
+    const TRASH_SPEED = 60
     const BOSS_SPEED = 48
     const PLAYER_SPEED = 480
     const BOSS_HEALTH = 10
     const OBJ_HEALTH = 1
     const OBJ_ALLY_HEALTH = 10
     const PLAYER_HEALTH = 150
-    const MAX_TRASH = 7;
+    const MAX_TRASH = 5;
     const MAX_ALLY = 3
 
     const healthPoints = [100, 90, 80, 70, 60, 50, 40, 35, 30, 25, 20, 15, 10, 5, 1]
@@ -2238,7 +2320,10 @@ scene("level3", () => {
     }
 
     add([
-        text("KILL", { size: 160 }),
+        text("KILL", { 
+            size: 160,
+            font: "superPixel"
+         }),
         pos(width() / 2, height() / 2),
         anchor("center"),
         lifespan(1),
@@ -2246,7 +2331,10 @@ scene("level3", () => {
     ])
 
     add([
-        text("THE", { size: 80 }),
+        text("THE", { 
+            size: 80,
+            font: "superPixel"
+         }),
         pos(width() / 2, height() / 2),
         anchor("center"),
         lifespan(2),
@@ -2255,7 +2343,10 @@ scene("level3", () => {
     ])
 
     add([
-        text(bossName.toUpperCase(), { size: 120 }),
+        text(bossName.toUpperCase(), { 
+            size: 60,
+            font: "superPixel"
+         }),
         pos(width() / 2, height() / 2),
         anchor("center"),
         lifespan(4),
@@ -2398,8 +2489,10 @@ scene("level3", () => {
     const SPAWN_INTERVAL = insaneMode ? 0.1 : 0.3;
 
     //fonction qui ajoute les trucs qui tombent du ciel, qui sont appelés Trash dans le code 
+    let offscreenTrashCount = 0;  // Counter for offscreen trash
+
     function spawnTrash() {
-        //console.log("Nombre de gameObject 'trash' disponibles: ", get("trash", 0.1).length);
+        // Ensure there are always MAX_TRASH trash objects
         while (get("trash").length < MAX_TRASH) {
             const name = choose(objsTrash3.filter(n => n != bossName));
             add([
@@ -2412,12 +2505,25 @@ scene("level3", () => {
                 "trash",
                 "enemy",
                 { speed: rand(TRASH_SPEED * 0.5, TRASH_SPEED * 1.5) },
-                offscreen({ destroy: true }),
+                { offscreenChecked: false }  // Custom property to track if offscreen check has been done
             ]);
         }
-
-        wait(SPAWN_INTERVAL, spawnTrash)
-    }
+    
+        wait(SPAWN_INTERVAL, spawnTrash);
+    };
+    loop(1, () => {
+        get("trash").forEach((t) => {
+            if (t.pos.y > height() && !t.offscreenChecked) {
+                offscreenTrashCount++;
+                t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
+                destroy(t);  // Destroy the trash object
+                console.log("Trash went offscreen. Current count:", offscreenTrashCount);
+                if (offscreenTrashCount > 3) {
+                    go("gameOver");
+                }
+            }
+        });
+    });
 
     const boss = add([
         sprite(bossName),
@@ -2497,7 +2603,9 @@ scene("level3", () => {
 
 
     const timer = add([
-        text(0),
+        text(0, {
+            font: "superPixel"
+        }),
         pos(25, 32),
         fixed(),
         { time: 0 },
@@ -2574,14 +2682,20 @@ scene("level3", () => {
     ]);
     
     add([
-        text(`hp de ${bossName}`),
+        text(`hp de ${bossName}`, {
+            font: "superPixel"
+        }),
         pos(width() - 55, 60),
         fixed(),
         rotate(90)
     ])
 
     add([
-        text("UP: insane mode", { width: width() / 2, size: 32 }),
+        text("UP: insane mode", { 
+            width: width() / 2,
+            size: 32,
+            font: "superPixel"
+         }),
         anchor("botleft"),
         pos(24, height() - 24),
     ])
@@ -2688,9 +2802,34 @@ scene("level3", () => {
 });
 
 scene("win", ()=>{
+    
     add([
-        text("TU A GAGNÉ!!")
+        sprite("generalBackground", {
+            width: width(),
+            height: height()
+        }),
+        pos(0,0),
+        fixed()
     ]);
+    
+    add([
+        text("TU A GAGNÉ!", {
+            font:"superPixel"
+        }),
+        anchor("center"),
+        pos(center()),
+        scale(1.5)
+    ]);
+
+    add([
+        text("Appuie sur espace pour rejouer", {
+            font:"superPixel",
+            width: 450  
+        }),
+        anchor("center"),
+        pos(370, 350),
+        scale(0.75)
+    ])
 
     onKeyPress("space", ()=>{
         go("accueil")
@@ -2698,11 +2837,38 @@ scene("win", ()=>{
 });
 
 scene("gameOver", ()=>{
+
     add([
-        text("GAME OVER")
+        sprite("generalBackground", {
+            width: width(),
+            height: height()
+        }),
+        pos(0,0),
+        fixed()
+    ])
+
+    add([
+        text("TU AS PERDU!", {
+            font:"superPixel"
+        }),
+        anchor("center"),
+        pos(center()),
+        scale(1.5)
     ]);
+
+    add([
+        text("Appuie sur espace pour rejouer", {
+            font:"superPixel",
+            width: 450  
+        }),
+        anchor("center"),
+        pos(370, 350),
+        scale(0.75)
+    ])
 
     onKeyPress("space", ()=>{
         go("accueil")
     });
 });
+
+debug.inspect = true

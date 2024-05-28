@@ -140,7 +140,7 @@ loadSprite("heart", "heart.png", {
         tourne: {
             from:0,
             to:3,
-            speed: 1.5,
+            speed: 2,
             loop: true
         },
     },
@@ -733,7 +733,7 @@ scene("level0", ()=>{
 
     add([
         text(bossName.toUpperCase(), { 
-            size: 60,
+            size: 45,
             font: "superPixel"
         }),
         pos(width() / 2, height() / 2),
@@ -1088,70 +1088,58 @@ scene("level0", ()=>{
         pos(24, height() - 24),
     ])
 
+    const hearts = []
+    for (let i=0; i<10; i++) {
+        const heart = add ([
+            sprite("heart", {
+                anim: "tourne"
+            }), 
+            pos(10, 10 + i * (32 + 5)),
+            fixed()
+        ]);
+        hearts.push(heart);
+    }
+
+    function updatePlayerHealth(hp) {
+        const heartsToShow = Math.ceil(hp / 10);
+        hearts.forEach((heart, index) => {
+            heart.hidden = index >= heartsToShow;
+        });
+    }
+    
+    // Initial call to set the full health display
+    updatePlayerHealth(PLAYER_HEALTH);
+
     player.onCollide("enemy", (e) => {
-        destroy(e)
-        //destroy(player)
-        //shake(120) 
-        //play("explode")
-        //music.detune = -1200
-        addExplode(player.pos, 1, 24, 1)
-        player.hurt(1)
-        e.hurt(insaneMode ? 10 : 1)
-        wait(1, () => {
-            //music.paused = true
-            //go("gameOver")
-        });
+        destroy(e);
+        addExplode(player.pos, 1, 24, 1);
+        player.hurt(1); // Assume 10 HP per hit for simplicity
+        e.hurt(insaneMode ? 10 : 1);
+        wait(1, () => {});
     });
-
-    player.onCollide("ally", (e) => {
-        destroy(e)
-        player.heal(1)
-        e.hurt(insaneMode ? 10 : 1)
-        wait(1, () => {
-            //music.paused = true
-        });
-        addExplode(player.pos, 1, 24, 1)
-    })
-
+    
     player.onHurt(() => {
-        playerHealthbar.set(player.hp())
-        //console.log(player.hp())
+        updatePlayerHealth(player.hp());
     });
-
+    
     player.onDeath(() => {
-        go("gameOver")
-        gameContainer.removeChild(secondCanvas)
+        go("gameOver");
+        gameContainer.removeChild(secondCanvas);
     });
-
+    
+    player.onCollide("ally", (e) => {
+        destroy(e);
+        player.heal(10); // Assume 10 HP per heal for simplicity
+        e.hurt(insaneMode ? 10 : 1);
+        wait(1, () => {});
+        addExplode(player.pos, 1, 24, 1);
+    });
+    
     player.onHeal(() => {
-        playerHealthbar.set(player.hp())
-        //console.log(player.hp())
-    })
-
-    const playerHealthbar = add([
-        rect(24, height()),
-        pos(0,0),
-        color(107, 201, 108),
-        fixed(),
-        {
-            max: PLAYER_HEALTH,
-            set(hp) {
-                this.height = height() * hp / this.max
-                this.flash = true
-            },
-        },
-
-    ])
-
-    playerHealthbar.onUpdate(() => {
-        if (playerHealthbar.flash) {
-            playerHealthbar.color = rgb(255, 255, 255)
-            playerHealthbar.flash = false
-        } else {
-            playerHealthbar.color = rgb(127, 255, 127)
-        }
-        
+        updatePlayerHealth(player.hp());
     });
+
+
 
     spawnTrash()
     spawnAlly()
@@ -1161,7 +1149,7 @@ scene("level0", ()=>{
         const secondCtx = secondCanvas.getContext('2d');
 
     let backgroundIndex = 0
-    backgroundIndex == playerHealthbar 
+    backgroundIndex == hearts
 
     const backgroundImages = backgrounds0.map(src => {
         const img = new Image ();
@@ -1180,20 +1168,22 @@ scene("level0", ()=>{
             };
         }
     };
-
     function update() {
         // Update the backgroundIndex based on player health
+
         for (let i = 0; i < healthPoints.length; i++) {
             if (player.hp() > healthPoints[i]) {
                 backgroundIndex = i;
                 break;
             }
+            
         }
 
         // Update the second canvas based on the current backgroundIndex
         updateSecondCanvas();
     }
 
+    
     // Add the update function to Kaboom's game loop
     onUpdate(update);
     
@@ -1287,7 +1277,7 @@ scene("level1", ()=>{
 
     add([
         text(bossName.toUpperCase(), { 
-            size: 60,
+            size: 45,
             font: "superPixel" 
         }),
         pos(width() / 2, height() / 2),
@@ -1633,65 +1623,55 @@ scene("level1", ()=>{
         pos(24, height() - 24),
     ])
 
+    const hearts = []
+    for (let i=0; i<10; i++) {
+        const heart = add ([
+            sprite("heart", {
+                anim: "tourne"
+            }), 
+            pos(10, 10 + i * (32 + 5)),
+            fixed()
+        ]);
+        hearts.push(heart);
+    }
+
+    function updatePlayerHealth(hp) {
+        const heartsToShow = Math.ceil(hp / 10);
+        hearts.forEach((heart, index) => {
+            heart.hidden = index >= heartsToShow;
+        });
+    }
+    
+    // Initial call to set the full health display
+    updatePlayerHealth(PLAYER_HEALTH);
+
     player.onCollide("enemy", (e) => {
-        destroy(e)
-        //destroy(player)
-        //shake(120) 
-        //play("explode")
-        //music.detune = -1200
-        addExplode(player.pos, 1, 24, 1)
-        player.hurt(1)
-        e.hurt(insaneMode ? 10 : 1)
-        wait(1, () => {
-            //music.paused = true
-            //go("gameOver")
-        });
+        destroy(e);
+        addExplode(player.pos, 1, 24, 1);
+        player.hurt(1); // Assume 10 HP per hit for simplicity
+        e.hurt(insaneMode ? 10 : 1);
+        wait(1, () => {});
     });
-
+    
     player.onHurt(() => {
-        playerHealthbar.set(player.hp())
+        updatePlayerHealth(player.hp());
     });
-
+    
     player.onDeath(() => {
-        go("gameOver")
-        gameContainer.removeChild(secondCanvas)
+        go("gameOver");
+        gameContainer.removeChild(secondCanvas);
     });
-
+    
     player.onCollide("ally", (e) => {
-        destroy(e)
-        player.heal(1)
-        e.hurt(insaneMode ? 10 : 1)
-        wait(1, () => {
-            //music.paused = true
-        });
-        addExplode(player.pos, 1, 24, 1)
-    })
-
+        destroy(e);
+        player.heal(10); // Assume 10 HP per heal for simplicity
+        e.hurt(insaneMode ? 10 : 1);
+        wait(1, () => {});
+        addExplode(player.pos, 1, 24, 1);
+    });
+    
     player.onHeal(() => {
-        playerHealthbar.set(player.hp())
-    })
-
-    const playerHealthbar = add([
-        rect(24, height()),
-        pos(0,0),
-        color(107, 201, 108),
-        fixed(),
-        {
-            max: PLAYER_HEALTH,
-            set(hp) {
-                this.height = height() * hp / this.max
-                this.flash = true
-            },
-        },
-    ])
-
-    playerHealthbar.onUpdate(() => {
-        if (playerHealthbar.flash) {
-            playerHealthbar.color = rgb(255, 255, 255)
-            playerHealthbar.flash = false
-        } else {
-            playerHealthbar.color = rgb(127, 255, 127)
-        }
+        updatePlayerHealth(player.hp());
     });
 
     spawnTrash();
@@ -1702,7 +1682,7 @@ scene("level1", ()=>{
     const secondCtx = secondCanvas.getContext('2d');
 
     let backgroundIndex = 0
-    backgroundIndex == playerHealthbar 
+    backgroundIndex == hearts 
 
     const backgroundImages = backgrounds1.map(src => {
         const img = new Image ();
@@ -1826,7 +1806,7 @@ scene("level2", ()=>{
 
     add([
         text(bossName.toUpperCase(), { 
-            size: 60,
+            size: 45,
             font: "superPixel"
          }),
         pos(width() / 2, height() / 2),
@@ -2173,62 +2153,55 @@ scene("level2", ()=>{
         pos(24, height() - 24),
     ])
 
+    const hearts = []
+    for (let i=0; i<10; i++) {
+        const heart = add ([
+            sprite("heart", {
+                anim: "tourne"
+            }), 
+            pos(10, 10 + i * (32 + 5)),
+            fixed()
+        ]);
+        hearts.push(heart);
+    }
+
+    function updatePlayerHealth(hp) {
+        const heartsToShow = Math.ceil(hp / 10);
+        hearts.forEach((heart, index) => {
+            heart.hidden = index >= heartsToShow;
+        });
+    }
+    
+    // Initial call to set the full health display
+    updatePlayerHealth(PLAYER_HEALTH);
+
     player.onCollide("enemy", (e) => {
-        destroy(e)
-        //destroy(player)
-        //shake(120) 
-        //play("explode")
-        //music.detune = -1200
-        addExplode(player.pos, 1, 24, 1)
-        player.hurt(1)
-        e.hurt(insaneMode ? 10 : 1)
-        wait(1, () => {
-            //music.paused = true
-            //go("gameOver")
-        });
+        destroy(e);
+        addExplode(player.pos, 1, 24, 1);
+        player.hurt(1); 
+        e.hurt(insaneMode ? 10 : 1);
+        wait(1, () => {});
     });
-
-
+    
     player.onHurt(() => {
-        playerHealthbar.set(player.hp())
+        updatePlayerHealth(player.hp());
     });
-
+    
     player.onDeath(() => {
-        go("gameOver")
-        gameContainer.removeChild(secondCanvas)
+        go("gameOver");
+        gameContainer.removeChild(secondCanvas);
     });
-
+    
     player.onCollide("ally", (e) => {
-        destroy(e)
-        player.heal(1)
-        e.hurt(insaneMode ? 10 : 1)
-        wait(1, () => {
-            //music.paused = true
-        });
-        addExplode(player.pos, 1, 24, 1)
-    })
-
-    const playerHealthbar = add([
-        rect(24, height()),
-        pos(0,0),
-        color(107, 201, 108),
-        fixed(),
-        {
-            max: PLAYER_HEALTH,
-            set(hp) {
-                this.height = height() * hp / this.max
-                this.flash = true
-            },
-        },
-    ])
-
-    playerHealthbar.onUpdate(() => {
-        if (playerHealthbar.flash) {
-            playerHealthbar.color = rgb(255, 255, 255)
-            playerHealthbar.flash = false
-        } else {
-            playerHealthbar.color = rgb(127, 255, 127)
-        }
+        destroy(e);
+        player.heal(10); 
+        e.hurt(insaneMode ? 10 : 1);
+        wait(1, () => {});
+        addExplode(player.pos, 1, 24, 1);
+    });
+    
+    player.onHeal(() => {
+        updatePlayerHealth(player.hp());
     });
 
     spawnTrash()
@@ -2237,7 +2210,7 @@ scene("level2", ()=>{
     const secondCtx = secondCanvas.getContext('2d');
 
     let backgroundIndex = 0
-    backgroundIndex == playerHealthbar 
+    backgroundIndex == hearts
 
     const backgroundImages = backgrounds2.map(src => {
         const img = new Image ();
@@ -2362,7 +2335,7 @@ scene("level3", () => {
 
     add([
         text(bossName.toUpperCase(), { 
-            size: 60,
+            size: 45,
             font: "superPixel"
          }),
         pos(width() / 2, height() / 2),
@@ -2730,62 +2703,55 @@ scene("level3", () => {
         pos(24, height() - 24),
     ])
 
+    const hearts = []
+    for (let i=0; i<10; i++) {
+        const heart = add ([
+            sprite("heart", {
+                anim: "tourne"
+            }), 
+            pos(10, 10 + i * (32 + 5)),
+            fixed()
+        ]);
+        hearts.push(heart);
+    }
+
+    function updatePlayerHealth(hp) {
+        const heartsToShow = Math.ceil(hp / 10);
+        hearts.forEach((heart, index) => {
+            heart.hidden = index >= heartsToShow;
+        });
+    }
+    
+    // Initial call to set the full health display
+    updatePlayerHealth(PLAYER_HEALTH);
+
     player.onCollide("enemy", (e) => {
-        destroy(e)
-        //destroy(player)
-        //shake(120) 
-        //play("explode")
-        //music.detune = -1200
-        addExplode(player.pos, 1, 24, 1)
-        player.hurt(1)
-        e.hurt(insaneMode ? 10 : 1)
-        wait(1, () => {
-            //music.paused = true
-            //go("gameOver")
-        });
+        destroy(e);
+        addExplode(player.pos, 1, 24, 1);
+        player.hurt(1); // Assume 10 HP per hit for simplicity
+        e.hurt(insaneMode ? 10 : 1);
+        wait(1, () => {});
     });
-
-
+    
     player.onHurt(() => {
-        playerHealthbar.set(player.hp())
+        updatePlayerHealth(player.hp());
     });
-
+    
     player.onDeath(() => {
-        go("gameOver")
-        gameContainer.removeChild(secondCanvas)
+        go("gameOver");
+        gameContainer.removeChild(secondCanvas);
     });
-
+    
     player.onCollide("ally", (e) => {
-        destroy(e)
-        player.heal(1)
-        e.hurt(insaneMode ? 10 : 1)
-        wait(1, () => {
-            //music.paused = true
-        });
-        addExplode(player.pos, 1, 24, 1)
-    })
-
-    const playerHealthbar = add([
-        rect(24, height()),
-        pos(0,0),
-        color(107, 201, 108),
-        fixed(),
-        {
-            max: PLAYER_HEALTH,
-            set(hp) {
-                this.height = height() * hp / this.max
-                this.flash = true
-            },
-        },
-    ])
-
-    playerHealthbar.onUpdate(() => {
-        if (playerHealthbar.flash) {
-            playerHealthbar.color = rgb(255, 255, 255)
-            playerHealthbar.flash = false
-        } else {
-            playerHealthbar.color = rgb(127, 255, 127)
-        }
+        destroy(e);
+        player.heal(10); // Assume 10 HP per heal for simplicity
+        e.hurt(insaneMode ? 10 : 1);
+        wait(1, () => {});
+        addExplode(player.pos, 1, 24, 1);
+    });
+    
+    player.onHeal(() => {
+        updatePlayerHealth(player.hp());
     });
 
     spawnTrash()
@@ -2794,7 +2760,7 @@ scene("level3", () => {
     const secondCtx = secondCanvas.getContext('2d');
 
     let backgroundIndex = 0
-    backgroundIndex == playerHealthbar 
+    backgroundIndex == hearts
 
     const backgroundImages = backgrounds3.map(src => {
         const img = new Image ();

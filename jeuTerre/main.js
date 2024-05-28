@@ -712,13 +712,13 @@ scene("level0", ()=>{
     const healthPoints = [100, 90, 80, 70, 60, 50, 30, 25, 20, 15, 10, 5, 1]
 
     const BULLET_SPEED = 800
-    const TRASH_SPEED = 60
-    const BOSS_SPEED = 48
+    const TRASH_SPEED = 70
+    const BOSS_SPEED = 75
     const PLAYER_SPEED = 480
-    const BOSS_HEALTH = 10
+    const BOSS_HEALTH = 20
     const OBJ_HEALTH = 1
     const PLAYER_HEALTH = 100
-    const MAX_TRASH = 5;
+    const MAX_TRASH = 7;
     const MAX_ALLY = 3
 
     const bossName = choose(objsTrash0)
@@ -1115,12 +1115,12 @@ scene("level0", ()=>{
             },
         },
     ]);
-    
+
     add([
         text(`hp de ${bossName}`, {
-            font: "superPixel"
-        }
-        ),
+            font: "superPixel",
+            size: 20
+        }),
         pos(width() - 55, 60),
         fixed(),
         rotate(90)
@@ -1188,7 +1188,7 @@ scene("level0", ()=>{
     
     player.onCollide("ally", (e) => {
         destroy(e);
-        player.heal(10); 
+        player.heal(10); // Assume 10 HP per heal for simplicity
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
         addExplode(player.pos, 1, 24, 1);
@@ -1273,8 +1273,8 @@ scene("level1", ()=>{
     ])
 
     const BULLET_SPEED = 800
-    const TRASH_SPEED = 60
-    const BOSS_SPEED = 48
+    const TRASH_SPEED = 80
+    const BOSS_SPEED = 80
     const PLAYER_SPEED = 480
     const BOSS_HEALTH = 10
     const OBJ_HEALTH = 1
@@ -1817,9 +1817,10 @@ scene("level2", ()=>{
     ])
 
     const BULLET_SPEED = 800
-    const TRASH_SPEED = 60
-    const BOSS_SPEED = 48
+    const TRASH_SPEED = 90
+    const BOSS_SPEED = 85
     const PLAYER_SPEED = 480
+    const ALLY_SPEED = 60
     const BOSS_HEALTH = 10
     const OBJ_HEALTH = 1
     const OBJ_ALLY_HEALTH = 10
@@ -2103,7 +2104,7 @@ scene("level2", ()=>{
     pietonAlly.play("marche")
 
     pietonAlly.onUpdate((p) => {
-        pietonAlly.move(TRASH_SPEED * pietonAlly.dir * (insaneMode ? 3 : 1), 0)
+        pietonAlly.move(ALLY_SPEED * pietonAlly.dir * (insaneMode ? 3 : 1), 0)
         if (pietonAlly.dir === 1 && pietonAlly.pos.x >= width() - 20) {
             pietonAlly.dir = -1
             pietonAlly.flipX = true
@@ -2362,9 +2363,10 @@ scene("level3", () => {
     ])
 
     const BULLET_SPEED = 800
-    const TRASH_SPEED = 60
-    const BOSS_SPEED = 48
+    const TRASH_SPEED = 90
+    const BOSS_SPEED = 90
     const PLAYER_SPEED = 480
+    const ALLY_SPEED = 55
     const BOSS_HEALTH = 10
     const OBJ_HEALTH = 1
     const OBJ_ALLY_HEALTH = 10
@@ -2645,7 +2647,7 @@ scene("level3", () => {
 
     trainAlly.onUpdate((p) => {
         if (!trainAlly.hidden) {
-            trainAlly.move(TRASH_SPEED * trainAlly.dir * (insaneMode ? 3 : 1), 0)
+            trainAlly.move(ALLY_SPEED * trainAlly.dir * (insaneMode ? 3 : 1), 0)
 
             //controle si le train a été vers la droite
             if (trainAlly.dir === 1 && trainAlly.pos.x >= width() - 20) {
@@ -2939,7 +2941,7 @@ scene("win", ()=>{
     ]);
 
     add([
-        text("Appuie sur espace pour rejouer", {
+        text("Appuie sur up pour rejouer", {
             font:"superPixel",
             width: 450  
         }),
@@ -2948,7 +2950,7 @@ scene("win", ()=>{
         scale(0.75)
     ])
 
-    onKeyPress("space", ()=>{
+    onKeyPress("up", ()=>{
         go("accueil")
         musicWin.stop()
         const spaceSound = play("spaceSound", {
@@ -2988,7 +2990,7 @@ scene("gameOver", ()=>{
     ]);
 
     add([
-        text("Appuie sur espace pour rejouer", {
+        text("Appuie sur up pour rejouer", {
             font:"superPixel",
             width: 450  
         }),
@@ -2997,7 +2999,7 @@ scene("gameOver", ()=>{
         scale(0.75)
     ])
 
-    onKeyPress("space", ()=>{
+    onKeyPress("up", ()=>{
         go("accueil")
         musicGameOver.stop()
         const spaceSound = play("spaceSound", {

@@ -110,7 +110,7 @@ loadSprite("slime", "spriteSlime.png", {
         parle: {
             from: 0,
             to: 1,
-            speed: 1,
+            speed: 2,
             loop: true
         }
     }
@@ -187,10 +187,22 @@ loadSprite("bullet11", "bullet11.png");*/
 
 loadSprite("generalBackground", "generalBackground.png")
 
-
-
 loadFont("superPixel", "assets/SuperPixel-m2L8j.ttf")
 
+//background audio
+loadSound("level0", "Fields of Ice.wav")
+loadSound("contexte", "explication.WAV")
+loadSound("level1", "The Way You Love.wav")
+loadSound("accueil", "Title Theme.wav")
+loadSound("level3", "Zero Respect.wav")
+loadSound("level2", "Abandoned Hopes.wav")
+loadSound("win", "victory1.WAV")
+loadSound("gameOver", "Fallen in Battle.wav")
+
+//sound effects
+loadSound("playerHeal", "heal.wav")
+loadSound("hurtEnemy", "menu_9.wav")
+loadSound("spaceSound", "hurtEnemy.wav")
 
 //Ecrire toutes les constantes utilisées dans chaque niveau 
 const objsBullet = [
@@ -206,6 +218,12 @@ const objsBullet = [
     "bullet10",
     "bullet11"
 ];
+
+let gameState = {
+    currentSong: null
+}
+    
+
 //LEVEL0
 const objsTrash0 = [
     "motoNoire",
@@ -330,6 +348,9 @@ const objsAlly3 = [
 scene("accueil", ()=>{
     //gameContainer.appendChild(secondCanvas)
     //charger musique
+    const musicAccueil = play("accueil", {
+        loop: true
+    })
 
     add([
         sprite("generalBackground", {
@@ -387,6 +408,10 @@ scene("accueil", ()=>{
 
     onKeyPress("space", ()=>{
         go("contexte")
+        const spaceSound = play("spaceSound", {
+            volume:1.4
+        })
+        musicAccueil.stop()
     });
 })
 
@@ -394,6 +419,10 @@ go("accueil");
 
 
 scene("contexte", ()=>{
+
+    const musicContexte = play("contexte", {
+        loop: true
+    })
 
     const dialogues = [
         ["slime", "Hello toi! Regarde cette pauvre planète terre... Elle était si belle avant les effets du rechauffement climatique!"],
@@ -460,8 +489,15 @@ scene("contexte", ()=>{
             curDialog++
             updateDialog()
             slime.play("parle")
+            const spaceSound = play("spaceSound", {
+                volume:1.4
+            })
         } else {
             go("explication")
+            const spaceSound = play("spaceSound", {
+                volume:1.4
+            })
+            musicContexte.stop()
         }
     })
     
@@ -491,6 +527,10 @@ scene("contexte", ()=>{
 
 //Explication du fonctionnement du jeu et des enjeux liés à la mobilité et aux transports 
 scene("explication", ()=>{
+    musicContexte = play("contexte", {
+        loop:true
+    })
+
     const dialogues1 = [
         ["slime", "Certains moyens de transports sont plus polluants que d'autres, alors que des alternatives sont disponibles pour une mobilité plus eco friendly!"],
         ["slime", "Tout d'abord, il y a les véhicules motorisés à usage individuel, pour lesquels d'autres choix sont souvent possibles!"],
@@ -546,8 +586,15 @@ scene("explication", ()=>{
             curDialog++
             updateDialog()
             slime.play("parle")
+            const spaceSound = play("spaceSound", {
+                volume:1.4
+            })
         } else {
             go("level0")
+            musicContexte.stop()
+            const spaceSound = play("spaceSound", {
+                volume:1.4
+            })
         }
     })
     
@@ -678,9 +725,9 @@ scene("level0", ()=>{
 
     let insaneMode = false
 
-    //const music = play("OtherworldlyFoe")
-
-    //volume(0.5)
+    const musicLevel0 = play("level0", {
+        loop: true
+    })
 
     //fonction qui est utilisé dans la fonction addExplode 
     function grow(rate) {
@@ -867,10 +914,9 @@ scene("level0", ()=>{
     onKeyPress("space", () => {
         spawnBullet(player.pos.add(6, 0))
         //spawnBullet(player.pos.sub(16, 0))
-        //play("shoot", {
-            //volume: 0.3,
-            //detune: rand(-1200, 1200),
-        //})
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
     })
 
     const SPAWN_INTERVAL = insaneMode ? 0.1 : 0.3;
@@ -926,6 +972,8 @@ scene("level0", ()=>{
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
                 if (offscreenTrashCount > 3) {
                     go("gameOver");
+                    musicLevel0.stop();
+                    gameContainer.removeChild(secondCanvas);
                 }
             }
         });
@@ -956,10 +1004,16 @@ scene("level0", ()=>{
             detune: rand(-1200, 1200),
             speed: rand(0.2, 2),
         })*/
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
     })
 
     on("hurt", "player", (e) => {
         shake(1)
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
     })
 
     on("death", "ally", (e) => {
@@ -969,7 +1023,10 @@ scene("level0", ()=>{
 
     on("hurt", "ally", (e) => {
         shake(1)
-    } )
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
+    })
 
 
     const timer = add([
@@ -1037,6 +1094,7 @@ scene("level0", ()=>{
             boss: bossName,
         })
         gameContainer.removeChild(secondCanvas)
+        musicLevel0.stop()
     })
 
     const bossHealthbar = add([
@@ -1125,14 +1183,18 @@ scene("level0", ()=>{
     player.onDeath(() => {
         go("gameOver");
         gameContainer.removeChild(secondCanvas);
+        musicLevel0.stop()
     });
     
     player.onCollide("ally", (e) => {
         destroy(e);
-        player.heal(10); // Assume 10 HP per heal for simplicity
+        player.heal(10); 
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
         addExplode(player.pos, 1, 24, 1);
+        let heal = play("playerHeal", {
+            volume:1.5
+        })
     });
     
     player.onHeal(() => {
@@ -1197,6 +1259,10 @@ scene("level1", ()=>{
     const secondCanvas = createCanvas(640,480);
     gameContainer.appendChild(secondCanvas)
 
+    const musicLevel1 = play("level1", {
+        loop: true
+    })
+
     add([
         sprite("generalBackground", {
             width: width(),
@@ -1221,10 +1287,6 @@ scene("level1", ()=>{
     const bossName = choose(objsTrash1)
 
     let insaneMode = false
-
-    //const music = play("OtherworldlyFoe")
-
-    //volume(0.5)
 
     //fonction qui est utilisé dans la fonction addExplode 
     function grow(rate) {
@@ -1417,6 +1479,9 @@ scene("level1", ()=>{
             //volume: 0.3,
             //detune: rand(-1200, 1200),
         //})
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
     })
 
     const SPAWN_INTERVAL = insaneMode ? 0.1 : 0.3;
@@ -1470,8 +1535,11 @@ scene("level1", ()=>{
                 t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
                 destroy(t);  // Destroy the trash object
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
-                if (offscreenTrashCount > 3) {
+                if (offscreenTrashCount < 5) {
                     go("gameOver");
+                    musicLevel1.stop();
+                    gameContainer.removeChild(secondCanvas);
+
                 }
             }
         });
@@ -1503,18 +1571,23 @@ scene("level1", ()=>{
 
     on("hurt", "ally", (e) => {
         shake(1)
-    } )
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
+    })
 
     on("hurt", "enemy", (e) => {
         shake(1)
-        /*play("hit", {
-            detune: rand(-1200, 1200),
-            speed: rand(0.2, 2),
-        })*/
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
     })
 
     on("hurt", "player", (e) => {
         shake(1)
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
     })
 
 
@@ -1583,6 +1656,7 @@ scene("level1", ()=>{
             boss: bossName,
         })
         gameContainer.removeChild(secondCanvas)
+        musicLevel1.stop()
     })
 
     const bossHealthbar = add([
@@ -1660,14 +1734,18 @@ scene("level1", ()=>{
     player.onDeath(() => {
         go("gameOver");
         gameContainer.removeChild(secondCanvas);
+        musicLevel1.stop()
     });
     
     player.onCollide("ally", (e) => {
         destroy(e);
-        player.heal(10); // Assume 10 HP per heal for simplicity
+        player.heal(10); 
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
         addExplode(player.pos, 1, 24, 1);
+        let heal = play("playerHeal", {
+            volume:1.5
+        })
     });
     
     player.onHeal(() => {
@@ -1724,6 +1802,10 @@ scene("level2", ()=>{
 
     const secondCanvas = createCanvas(640,480);
     gameContainer.appendChild(secondCanvas)
+
+    let musicLevel2 = play("level2", {
+        loop:true
+    })
 
     add([
         sprite("generalBackground", {
@@ -1946,6 +2028,9 @@ scene("level2", ()=>{
             //volume: 0.3,
             //detune: rand(-1200, 1200),
         //})
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
     })
 
     const SPAWN_INTERVAL = insaneMode ? 0.1 : 0.3;
@@ -1982,6 +2067,8 @@ scene("level2", ()=>{
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
                 if (offscreenTrashCount > 3) {
                     go("gameOver");
+                    musicLevel2.stop();
+                    gameContainer.removeChild(secondCanvas);
                 }
             }
         });
@@ -2035,14 +2122,16 @@ scene("level2", ()=>{
 
     on("hurt", "enemy", (e) => {
         shake(1)
-        /*play("hit", {
-            detune: rand(-1200, 1200),
-            speed: rand(0.2, 2),
-        })*/
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
     })
 
     on("hurt", "player", (e) => {
         shake(1)
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
     })
 
     on("death", "ally", (e) => {
@@ -2052,7 +2141,10 @@ scene("level2", ()=>{
 
     on("hurt", "ally", (e) => {
         shake(1)
-    } )
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
+    })
 
 
     const timer = add([
@@ -2107,12 +2199,12 @@ scene("level2", ()=>{
     })
 
     boss.onDeath(() => {
-        //music.stop()
         go("level3", {
             time: timer.time,
             boss: bossName,
         })
         gameContainer.removeChild(secondCanvas)
+        musicLevel2.stop()
     })
 
     const bossHealthbar = add([
@@ -2190,6 +2282,7 @@ scene("level2", ()=>{
     player.onDeath(() => {
         go("gameOver");
         gameContainer.removeChild(secondCanvas);
+        musicLevel2.stop()
     });
     
     player.onCollide("ally", (e) => {
@@ -2198,6 +2291,9 @@ scene("level2", ()=>{
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
         addExplode(player.pos, 1, 24, 1);
+        let heal = play("playerHeal", {
+            volume:1.5
+        })
     });
     
     player.onHeal(() => {
@@ -2252,6 +2348,10 @@ scene("level3", () => {
     const secondCanvas = createCanvas(640,480);
     gameContainer.appendChild(secondCanvas)
 
+    let musicLevel3 = play("level3", {
+        loop:true
+    })
+
     add([
         sprite("generalBackground", {
             width: width(),
@@ -2279,10 +2379,6 @@ scene("level3", () => {
     const bossName = choose(objsTrash3)
 
     let insaneMode = false
-
-    //const music = play("OtherworldlyFoe")
-
-    //volume(0.5)
 
     //fonction qui est utilisé dans la fonction addExplode 
     function grow(rate) {
@@ -2475,15 +2571,17 @@ scene("level3", () => {
             //volume: 0.3,
             //detune: rand(-1200, 1200),
         //})
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
     })
 
     const SPAWN_INTERVAL = insaneMode ? 0.1 : 0.3;
 
     //fonction qui ajoute les trucs qui tombent du ciel, qui sont appelés Trash dans le code 
-    let offscreenTrashCount = 0;  // Counter for offscreen trash
+    let offscreenTrashCount = 0;  
 
     function spawnTrash() {
-        // Ensure there are always MAX_TRASH trash objects
         while (get("trash").length < MAX_TRASH) {
             const name = choose(objsTrash3.filter(n => n != bossName));
             add([
@@ -2511,6 +2609,8 @@ scene("level3", () => {
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
                 if (offscreenTrashCount > 3) {
                     go("gameOver");
+                    musicLevel3.stop();
+                    gameContainer.removeChild(secondCanvas);
                 }
             }
         });
@@ -2584,14 +2684,16 @@ scene("level3", () => {
 
     on("hurt", "enemy", (e) => {
         shake(1)
-        /*play("hit", {
-            detune: rand(-1200, 1200),
-            speed: rand(0.2, 2),
-        })*/
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
     })
 
     on("hurt", "player", (e) => {
         shake(1)
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
     })
 
     on("death", "ally", (e) => {
@@ -2601,7 +2703,10 @@ scene("level3", () => {
 
     on("hurt", "ally", (e) => {
         shake(1)
-    } )
+        let shoot = play("hurtEnemy", {
+            volume:0.85
+        })
+    })
 
 
     const timer = add([
@@ -2657,12 +2762,12 @@ scene("level3", () => {
     })
 
     boss.onDeath(() => {
-        //music.stop()
         go("win", {
             time: timer.time,
             boss: bossName,
         })
         gameContainer.removeChild(secondCanvas)
+        musicLevel3.stop()
     })
 
     const bossHealthbar = add([
@@ -2740,14 +2845,18 @@ scene("level3", () => {
     player.onDeath(() => {
         go("gameOver");
         gameContainer.removeChild(secondCanvas);
+        musicLevel3.stop();
     });
     
     player.onCollide("ally", (e) => {
         destroy(e);
-        player.heal(10); // Assume 10 HP per heal for simplicity
+        player.heal(10); 
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
         addExplode(player.pos, 1, 24, 1);
+        let heal = play("playerHeal", {
+            volume:1.5
+        })
     });
     
     player.onHeal(() => {
@@ -2799,7 +2908,7 @@ scene("level3", () => {
 });
 
 scene("win", ()=>{
-    
+    let musicWin = play("win")
     add([
         sprite("generalBackground", {
             width: width(),
@@ -2841,11 +2950,15 @@ scene("win", ()=>{
 
     onKeyPress("space", ()=>{
         go("accueil")
+        musicWin.stop()
+        const spaceSound = play("spaceSound", {
+            volume:1.4
+        })
     });
 });
 
 scene("gameOver", ()=>{
-
+    let musicGameOver = play("gameOver")
     add([
         sprite("generalBackground", {
             width: width(),
@@ -2886,6 +2999,10 @@ scene("gameOver", ()=>{
 
     onKeyPress("space", ()=>{
         go("accueil")
+        musicGameOver.stop()
+        const spaceSound = play("spaceSound", {
+            volume:1.4
+        })
     });
 });
 

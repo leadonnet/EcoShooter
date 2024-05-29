@@ -148,7 +148,7 @@ loadSprite("heart", "heart.png", {
 
 
 //loader les sprite individuels de façon simplifiée, juste écrire le nom du fichier dans tableauSprites 
-const tableauSprites = ["voitureRose","voitureBleu","furgonGris","jeepGris","voitureAzur","voitureBlanche","voitureBordeau","voitureJaune","voitureNoire","voitureRouge","motoNoire","motoRouge","motoBleu","vanBleu","bullet1","bullet2","bullet3","bullet4","bullet5","bullet6","bullet7","bullet8","bullet9","bullet10","bullet11","busPublic", "avion", "helico", "jetRouge", "jetHelico", "locomotive", "vagon", "train", "velo", "objetsNeg1", "objetsNeg2", "objetsPos1", "objetsPos2", "commandes"]
+const tableauSprites = ["voitureRose","voitureBleue","furgonGris","jeepGris","voitureAzure","voitureBlanche","voitureBordeau","voitureJaune","voitureNoire","voitureRouge","motoNoire","motoRouge","motoBleue","vanBleu","bullet1","bullet2","bullet3","bullet4","bullet5","bullet6","bullet7","bullet8","bullet9","bullet10","bullet11","busPublic", "avion", "helico", "jetRouge", "jetHelico", "locomotive", "vagon", "train", "velo", "objetsNeg1", "objetsNeg2", "objetsPos1", "objetsPos2", "commandes"]
 
 function chargerSprites(tableau){
     tableau.forEach(v =>{
@@ -228,7 +228,7 @@ let gameState = {
 const objsTrash0 = [
     "motoNoire",
     "motoRouge",
-    "motoBleu",
+    "motoBleue",
 ];
 
 const objsAlly0 = [
@@ -274,8 +274,8 @@ const backgrounds1 = [
 //mettre toute la trash dans une constante
 const objsTrash1 = [
     "voitureRose",
-    "voitureBleu",
-    "voitureAzur",
+    "voitureBleue",
+    "voitureAzure",
     "voitureBlanche",
     "voitureBordeau",
     "voitureJaune",
@@ -308,7 +308,7 @@ backgrounds2 = [
 const objsTrash2 = [
     "furgonGris",
     "jeepGris",
-    "voitureBleu",
+    "voitureBleue",
     "vanBleu",
 ];
 //LEVEL3
@@ -536,7 +536,7 @@ scene("explication", ()=>{
         ["slime", "Tout d'abord, il y a les véhicules motorisés à usage individuel, pour lesquels d'autres choix sont souvent possibles!"],
         ["slime", "Ensuite, pour les grands trajets, il est aussi possible de bouger plus lentement mais en polluant moins!"],
         ["slime", "Afin d'empecher l'explosion de la terre, tu dois detruire les exemples de mobilité négative!"],
-        ["slime", "Voici la liste de commandes. Tue le boss et tous les ennemis, mais évite les alliés!"]
+        ["slime", "Voici la liste de commandes. Tue le boss et tous les ennemis, mais évite les alliés! Si tu as besoin d'énergie, ils pourront t'aider."]
 
     ]
 
@@ -1180,7 +1180,7 @@ scene("level0", ()=>{
     player.onCollide("enemy", (e) => {
         destroy(e);
         addExplode(player.pos, 1, 24, 1);
-        player.hurt(1); // Assume 10 HP per hit for simplicity
+        player.hurt(10); // Assume 10 HP per hit for simplicity
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
     });
@@ -1733,7 +1733,7 @@ scene("level1", ()=>{
     player.onCollide("enemy", (e) => {
         destroy(e);
         addExplode(player.pos, 1, 24, 1);
-        player.hurt(1); // Assume 10 HP per hit for simplicity
+        player.hurt(10); // Assume 10 HP per hit for simplicity
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
     });
@@ -2284,7 +2284,7 @@ scene("level2", ()=>{
     player.onCollide("enemy", (e) => {
         destroy(e);
         addExplode(player.pos, 1, 24, 1);
-        player.hurt(1); 
+        player.hurt(10); 
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
     });
@@ -2851,7 +2851,7 @@ scene("level3", () => {
     player.onCollide("enemy", (e) => {
         destroy(e);
         addExplode(player.pos, 1, 24, 1);
-        player.hurt(1); // Assume 10 HP per hit for simplicity
+        player.hurt(10); // Assume 10 HP per hit for simplicity
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
     });

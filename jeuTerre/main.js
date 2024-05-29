@@ -970,19 +970,20 @@ scene("level0", ()=>{
                 t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
                 destroy(t);  // Destroy the trash object
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
-                if (offscreenTrashCount < 4) {
-                    go("gameOver");
-                    musicLevel0.stop();
-                    // Apparemment le problème est que l'élément enlevé n'est pas le bon
-                    // Solutions testées mais qui ne marchent pas : 
-                    //gameContainer.removeChild(secondCanvas);
-                    //gameContainer.removeChild(gameContainer.lastElementChild)
-                    //secondCanvas.parentNode.removeChild(secondCanvas)
-                    // Solution qui a l'air de marcher : 
-                    gameContainer.removeChild(gameContainer.childNodes[1])
-                }
             }
         });
+        //Déplacer cette condition en dessous permet de faire marcher le jeu
+        if (offscreenTrashCount > 1) {
+            go("gameOver");
+            musicLevel0.stop();
+            // Apparemment le problème est que l'élément enlevé n'est pas le bon
+            // Solutions testées mais qui ne marchent pas : 
+            gameContainer.removeChild(secondCanvas);
+            //gameContainer.removeChild(gameContainer.lastElementChild)
+            //secondCanvas.parentNode.removeChild(secondCanvas)
+            // Solution qui a l'air de marcher : 
+            //gameContainer.removeChild(gameContainer.childNodes[1])
+        }
     });
 
     const boss = add([
@@ -1543,14 +1544,15 @@ scene("level1", ()=>{
                 t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
                 destroy(t);  // Destroy the trash object
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
-                if (offscreenTrashCount < 4) {
-                    go("gameOver");
-                    musicLevel1.stop();
-                    gameContainer.removeChild(secondCanvas);
-
-                }
+                
             }
         });
+        if (offscreenTrashCount > 1) {
+            go("gameOver");
+            musicLevel1.stop();
+            gameContainer.removeChild(secondCanvas);
+
+        }
     });
 
     const boss = add([
@@ -2075,13 +2077,14 @@ scene("level2", ()=>{
                 t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
                 destroy(t);  // Destroy the trash object
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
-                if (offscreenTrashCount < 4) {
-                    go("gameOver");
-                    musicLevel2.stop();
-                    gameContainer.removeChild(secondCanvas);
-                }
+                
             }
         });
+        if (offscreenTrashCount > 1) {
+            go("gameOver");
+            musicLevel2.stop();
+            gameContainer.removeChild(secondCanvas);
+        }
     });
 
     const boss = add([
@@ -2619,13 +2622,15 @@ scene("level3", () => {
                 t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
                 destroy(t);  // Destroy the trash object
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
-                if (offscreenTrashCount < 4) {
+                
+            }
+        });
+        
+        if (offscreenTrashCount > 1) {
                     go("gameOver");
                     musicLevel3.stop();
                     gameContainer.removeChild(secondCanvas);
                 }
-            }
-        });
     });
 
     const boss = add([

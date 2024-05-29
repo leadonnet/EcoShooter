@@ -718,7 +718,7 @@ scene("level0", ()=>{
     const BOSS_HEALTH = 20
     const OBJ_HEALTH = 1
     const PLAYER_HEALTH = 100
-    const MAX_TRASH = 7;
+    const MAX_TRASH = 5;
     const MAX_ALLY = 3
 
     const bossName = choose(objsTrash0)
@@ -970,7 +970,7 @@ scene("level0", ()=>{
                 t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
                 destroy(t);  // Destroy the trash object
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
-                if (offscreenTrashCount > 3) {
+                if (offscreenTrashCount < 4) {
                     go("gameOver");
                     musicLevel0.stop();
                     gameContainer.removeChild(secondCanvas);
@@ -991,7 +991,8 @@ scene("level0", ()=>{
             dir: 1,
         },
     ])
-
+    
+    
     on("death", "enemy", (e) => {
         destroy(e)
         shake(2)
@@ -1535,7 +1536,7 @@ scene("level1", ()=>{
                 t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
                 destroy(t);  // Destroy the trash object
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
-                if (offscreenTrashCount < 5) {
+                if (offscreenTrashCount < 4) {
                     go("gameOver");
                     musicLevel1.stop();
                     gameContainer.removeChild(secondCanvas);
@@ -1680,7 +1681,8 @@ scene("level1", ()=>{
     
     add([
         text(`hp de ${bossName}`, {
-            font: "superPixel"
+            font: "superPixel",
+            size:20
         }),
         pos(width() - 55, 60),
         fixed(),
@@ -2066,7 +2068,7 @@ scene("level2", ()=>{
                 t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
                 destroy(t);  // Destroy the trash object
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
-                if (offscreenTrashCount > 3) {
+                if (offscreenTrashCount < 4) {
                     go("gameOver");
                     musicLevel2.stop();
                     gameContainer.removeChild(secondCanvas);
@@ -2229,7 +2231,8 @@ scene("level2", ()=>{
     
     add([
         text(`hp de ${bossName}`, {
-            font: "superPixel"
+            font: "superPixel",
+            size:20
         }),
         pos(width() - 55, 60),
         fixed(),
@@ -2609,7 +2612,7 @@ scene("level3", () => {
                 t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
                 destroy(t);  // Destroy the trash object
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
-                if (offscreenTrashCount > 3) {
+                if (offscreenTrashCount < 4) {
                     go("gameOver");
                     musicLevel3.stop();
                     gameContainer.removeChild(secondCanvas);
@@ -2793,7 +2796,8 @@ scene("level3", () => {
     
     add([
         text(`hp de ${bossName}`, {
-            font: "superPixel"
+            font: "superPixel",
+            size:20
         }),
         pos(width() - 55, 60),
         fixed(),

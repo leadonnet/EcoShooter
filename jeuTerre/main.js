@@ -973,7 +973,13 @@ scene("level0", ()=>{
                 if (offscreenTrashCount < 4) {
                     go("gameOver");
                     musicLevel0.stop();
-                    gameContainer.removeChild(secondCanvas);
+                    // Apparemment le problème est que l'élément enlevé n'est pas le bon
+                    // Solutions testées mais qui ne marchent pas : 
+                    //gameContainer.removeChild(secondCanvas);
+                    //gameContainer.removeChild(gameContainer.lastElementChild)
+                    //secondCanvas.parentNode.removeChild(secondCanvas)
+                    // Solution qui a l'air de marcher : 
+                    gameContainer.removeChild(gameContainer.childNodes[1])
                 }
             }
         });
@@ -1094,7 +1100,8 @@ scene("level0", ()=>{
             time: timer.time,
             boss: bossName,
         })
-        gameContainer.removeChild(secondCanvas)
+        //gameContainer.removeChild(secondCanvas)
+        gameContainer.removeChild(gameContainer.childNodes[1])
         musicLevel0.stop()
     })
 

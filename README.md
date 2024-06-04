@@ -10,8 +10,11 @@ Pour passer chaque niveau, le joueur doit détruire l'ennemi principal qui bouge
 
 ## Commandes du jeu
 → : bouger à droite
+
 ← : bouger à gauche 
+
 espace : passer les dialogues et tirer 
+
 ↑ : recommencer le jeu 
 
 

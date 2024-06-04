@@ -13,8 +13,6 @@ function createCanvas(width, height) {
 
 const mainCanvas = createCanvas(640, 480);
 
-//const secondCanvas = createCanvas(640,480);
-
 const gameContainer = document.getElementById("game-container");
 
 gameContainer.appendChild(mainCanvas)
@@ -23,8 +21,6 @@ gameContainer.appendChild(mainCanvas)
 //charger kaboom
 const k = kaboom({
     canvas: mainCanvas,
-    //couleur du fond
-    //background: [0,0,1],
     //largeur et hauteur 
     width: 640,
     height: 480,
@@ -116,19 +112,6 @@ loadSprite("slime", "spriteSlime.png", {
     }
 })
 
-/*loadSprite("explosion", "explosion.png", {
-    sliceX:10,
-    sliceY:1,
-    anims:{
-        go: {
-            from:9,
-            to:0,
-            speed: 1.5,
-            loop:true
-        }
-    }
-})*/
-
 loadSprite("healthBar", "healthBar.png", {
     sliceY: 12
 })
@@ -157,33 +140,6 @@ function chargerSprites(tableau){
 }
 
 chargerSprites(tableauSprites);
-
-
-/*loadSprite("voitureRose", "voitureRose.png");
-loadSprite("voitureBleu", "voitureBleu.png");
-loadSprite("furgonGris", "furgonGris.png");
-loadSprite("jeepGris", "jeepGris.png");
-loadSprite("voitureAzur", "voitureAzur.png");
-loadSprite("voitureBlanche", "voitureBlanche.png");
-loadSprite("voitureBordeau", "voitureBordeau.png");
-loadSprite("voitureJaune", "voitureJaune.png");
-loadSprite("voitureNoire", "voitureNoire.png");
-loadSprite("voitureRouge", "voitureRouge.png");
-loadSprite("motoNoire", "motoNoire.png");
-loadSprite("motoRouge", "motoRouge.png");
-loadSprite("motoBleu", "motoBleu.png");
-loadSprite("vanBleu", "vanBleu.png");
-loadSprite("bullet1", "bullet1.png");
-loadSprite("bullet2", "bullet2.png");
-loadSprite("bullet3", "bullet3.png");
-loadSprite("bullet4", "bullet4.png");
-loadSprite("bullet5", "bullet5.png");
-loadSprite("bullet6", "bullet6.png");
-loadSprite("bullet7", "bullet7.png");
-loadSprite("bullet8", "bullet8.png");
-loadSprite("bullet9", "bullet9.png");
-loadSprite("bullet10", "bullet10.png");
-loadSprite("bullet11", "bullet11.png");*/
 
 loadSprite("generalBackground", "generalBackground.png")
 
@@ -257,9 +213,7 @@ const backgrounds0 = [
 const backgrounds1 = [
     "assets/ville0.jpeg",
     "assets/ville1.jpeg",
-    //"assets/ville2.jpeg",
     "assets/ville3.jpeg",
-    //"assets/ville3A.jpeg",
     "assets/ville3B.jpeg",
     "assets/ville4.jpeg",
     "assets/ville4A.jpeg",
@@ -290,7 +244,6 @@ const objsAlly1 = [
 backgrounds2 = [
     "assets/industrie1.jpeg",
     "assets/industrie2.jpeg",
-    //"assets/industrie3.jpeg",
     "assets/industrie4.jpeg",
     "assets/industrie5.jpeg",
     "assets/industrie6.jpeg",
@@ -315,9 +268,7 @@ const objsTrash2 = [
 
 const backgrounds3 = [
     "assets/campagne1.jpeg",
-    //"assets/campagne2.jpeg",
     "assets/campagne3.jpeg",
-    //"assets/campagne4.jpeg",
     "assets/campagne5.jpeg",
     "assets/campagne6.jpeg",
     "assets/campagne7.jpeg",
@@ -335,7 +286,6 @@ const objsTrash3 = [
     "avion",
     "helico",
     "jetRouge",
-    //"jetHelico",
 ];
 
 const objsAlly3 = [
@@ -365,7 +315,6 @@ scene("accueil", ()=>{
     //objet terre 
     const terreTournante = add([
         sprite("terre", {
-            //comportement de l'objet terre, qui doit avoir le sprite avec caractéristique de l'animation "tourne"
             anim: "tourne",
             width: 500,
             height: 500,
@@ -424,6 +373,7 @@ scene("contexte", ()=>{
         loop: true
     })
 
+    //Définition du contenu des dialogues
     const dialogues = [
         ["slime", "Hello toi! Regarde cette pauvre planète terre... Elle était si belle avant les effets du rechauffement climatique!"],
         ["slime", "Si le rechauffement climatique continue à ce rythme, la terre va devenir invivable de façon définitive."],
@@ -452,7 +402,7 @@ scene("contexte", ()=>{
 
     let curDialog = 0
 
-    // Text bubble
+    // Structure de la bulle de texte
     const textbox = add([
         rect(width() - 200, 200, { radius: 32 }),
         anchor("center"),
@@ -460,7 +410,7 @@ scene("contexte", ()=>{
         outline(4),
     ])
 
-    // Text
+    // Caractérisation du texte dans la bulle
     const txt = add([
         text("", { 
             size: 20, 
@@ -484,7 +434,7 @@ scene("contexte", ()=>{
     ])
 
     onKeyPress("space", () => {
-        // Move to the next dialog if there are any left 
+        // Bouger d'un dialogue à l'autre et quand ils sont finis, changer de scène 
         if (curDialog < dialogues.length - 1) {
             curDialog++
             updateDialog()
@@ -501,14 +451,10 @@ scene("contexte", ()=>{
         }
     })
     
-    // Update the on screen sprite & text
+    // Mise à jour des dialogues
     function updateDialog() {
     
         const [ char, dialog ] = dialogues[curDialog]
-    
-        /*slime.use(sprite(char))*/
-
-        // Update the dialog text
         txt.text = dialog
     
     }
@@ -531,6 +477,7 @@ scene("explication", ()=>{
         loop:true
     })
 
+    //Définition du contenu des dialogues
     const dialogues1 = [
         ["slime", "Certains moyens de transports sont plus polluants que d'autres, alors que des alternatives sont disponibles pour une mobilité plus eco friendly!"],
         ["slime", "Tout d'abord, il y a les véhicules motorisés à usage individuel, pour lesquels d'autres choix sont souvent possibles!"],
@@ -551,7 +498,6 @@ scene("explication", ()=>{
 
     let curDialog = 0
 
-    // Text bubble
     const textbox = add([
         rect(width() - 200, 200, { radius: 32 }),
         anchor("center"),
@@ -559,7 +505,6 @@ scene("explication", ()=>{
         outline(4),
     ])
 
-    // Text
     const txt = add([
         text("", { 
             size: 20, 
@@ -597,26 +542,23 @@ scene("explication", ()=>{
             })
         }
     })
-    
-    // Update the on screen sprite & text
+  
     function updateDialog() {
         const [ char, dialog ] = dialogues1[curDialog]
-        // Use a new sprite component to replace the old one
+     
         slime.use(sprite(char))
-        // Update the dialog text
+    
         txt.text = dialog
 
-        // Remove existing objects before adding new ones
         destroyAll("dynamicObject")
 
         const baseX = (width()*2/4)
         const baseY = height()/3
 
         if (curDialog === 0) {
-            // Add objects for the first dialogue
-            
+     
+        //Ajouter les sprite des transports pour chaque dialogue
         } else if (curDialog === 1) {
-            // Add objects for the second dialogue
             add([
                 sprite("objetsNeg1"),
                 pos(width()/4 - 60, baseY - 120),
@@ -631,7 +573,6 @@ scene("explication", ()=>{
             ])
             
         } else if (curDialog === 2) {
-            // Add objects for the third dialogue
             add([
                 sprite("objetsNeg2"),
                 pos(width() / 4 - 60, baseY - 120),
@@ -694,6 +635,8 @@ scene("explication", ()=>{
 
 });
 
+//Le code de chaque niveau a environ la même structure et grammaire (sauf pour certains détails), donc uniquement le niveau 0 est commenté de façon plus extensive 
+
 scene("level0", ()=>{
 
     add([
@@ -705,6 +648,7 @@ scene("level0", ()=>{
         fixed()
     ])
 
+    //ajout du deuxième canvas (sans la librairie de kaboom.js) à la droite du mainCanvas 
     const secondCanvas = createCanvas(640,480);
     gameContainer.appendChild(secondCanvas)
 
@@ -755,6 +699,7 @@ scene("level0", ()=>{
         }
     }
 
+    //Texte qui définit le boss du niveau
     add([
         text("KILL", { 
             size: 160,
@@ -790,12 +735,12 @@ scene("level0", ()=>{
         fixed(),
     ])
 
+    //Couleur du ciel (utile surtout pour le insaneMode)
     const sky = add([
         rect(width(), height()),
         color(0, 0, 0),
         opacity(0),
     ])
-
     sky.onUpdate(() => {
         if (insaneMode) {
             const t = time() * 10
@@ -809,8 +754,7 @@ scene("level0", ()=>{
         }
     })
 
-    //ajouter le joueur 
-
+    //ajouter le joueur et définir ses mouvements 
     let animEnCours = false;
 
     const player = add([
@@ -861,15 +805,13 @@ scene("level0", ()=>{
 
     onKeyPress("up", () => {
         insaneMode = true
-        //music.speed = 2
     })
 
     onKeyRelease("up", () => {
         insaneMode = false
-        //music.speed = 1
     })
 
-    //fonction qui ajoute trucs blancs et shake lors du collide entre plusieurs trucs, qui est appelé plusieurs fois ensuite dans le code 
+    //fonction qui ajoute des cercles verts quand un objet est centré par bullet 
     function addExplode(p, n, rad, size) {
         for (let i = 0; i < n; i++) {
             wait(rand(n * 0.1), () => {
@@ -888,6 +830,7 @@ scene("level0", ()=>{
         }
     }
 
+    //fonction qui définit ce qui doit se passer quand le bullet est tiré 
     function spawnBullet(p) {
         const name1 = choose(objsBullet)
         add([
@@ -921,6 +864,7 @@ scene("level0", ()=>{
 
     const SPAWN_INTERVAL = insaneMode ? 0.1 : 0.3;
 
+    //fonction qui ajoute les éléments de mobilité positifs (définit comme "ally")
     function spawnAlly() {
         //console.log("Nombre de gameObject 'ally' disponibles: ", get("ally", 0.1).length)
         while (get("ally").length < MAX_ALLY) {
@@ -940,11 +884,12 @@ scene("level0", ()=>{
         wait(SPAWN_INTERVAL, spawnAlly)
     }
 
-    //fonction qui ajoute les trucs qui tombent du ciel, qui sont appelés Trash dans le code 
-    let offscreenTrashCount = 0;  // Counter for offscreen trash
+    //fonction qui ajoute les éléments de mobilité négatifs (définit comme "trash")
+    // définition du compteur de trash sur l'écran 
+    let offscreenTrashCount = 0;  
 
     function spawnTrash() {
-        // Ensure there are always MAX_TRASH trash objects
+        //les objets trash à l'écran ne doivent jamais dépasser MAX_TRASH
         while (get("trash").length < MAX_TRASH) {
             const name = choose(objsTrash0.filter(n => n != bossName));
             add([
@@ -957,18 +902,19 @@ scene("level0", ()=>{
                 "trash",
                 "enemy",
                 { speed: rand(TRASH_SPEED * 0.5, TRASH_SPEED * 1.5) },
-                { offscreenChecked: false }  // Custom property to track if offscreen check has been done
+                { offscreenChecked: false } 
             ]);
         }
     
         wait(SPAWN_INTERVAL, spawnTrash);
     };
+    //Boucle qui se charge de mettre à jour combien d'objets négatifs ont été laissé passé et de les détruire 
     loop(1, () => {
         get("trash").forEach((t) => {
             if (t.pos.y > height() && !t.offscreenChecked) {
                 offscreenTrashCount++;
-                t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
-                destroy(t);  // Destroy the trash object
+                t.offscreenChecked = true;  
+                destroy(t);  
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
             }
         });
@@ -986,6 +932,7 @@ scene("level0", ()=>{
         }
     });
 
+    //ajouter le boss 
     const boss = add([
         sprite(bossName),
         area(),
@@ -999,19 +946,14 @@ scene("level0", ()=>{
         },
     ])
     
-    
+    //Définition d'interactions pour les différents objets sur l'écran 
     on("death", "enemy", (e) => {
         destroy(e)
         shake(2)
-        //addKaboom(e.pos)
     })
 
     on("hurt", "enemy", (e) => {
         shake(1)
-        /*play("hit", {
-            detune: rand(-1200, 1200),
-            speed: rand(0.2, 2),
-        })*/
         let shoot = play("hurtEnemy", {
             volume:0.85
         })
@@ -1036,7 +978,7 @@ scene("level0", ()=>{
         })
     })
 
-
+    //Ajouter du timer 
     const timer = add([
         text(0, {
             font: "superPixel"
@@ -1051,6 +993,7 @@ scene("level0", ()=>{
         timer.text = timer.time.toFixed(2)
     })
 
+    //Définition des actions de collide entre les différents objets 
     onCollide("bullet", "enemy", (b, e) => {
         destroy(b)
         e.hurt(insaneMode ? 10 : 1)
@@ -1096,30 +1039,27 @@ scene("level0", ()=>{
     })
 
     boss.onDeath(() => {
-        //music.stop()
         go("level1", {
             time: timer.time,
             boss: bossName,
         })
-        //gameContainer.removeChild(secondCanvas)
-        gameContainer.removeChild(gameContainer.childNodes[1])
+        gameContainer.removeChild(secondCanvas)
+        //gameContainer.removeChild(gameContainer.childNodes[1])
         musicLevel0.stop()
     })
 
+    //Ajout de la barre de vie du boss et lien avec ses points de vie, 
     const bossHealthbar = add([
-        sprite("healthBar", { frame: 0 }), // Start with the first frame (full health)
-        pos(width() - 55, 450), // Adjust position as needed
+        sprite("healthBar", { frame: 0 }), 
+        pos(width() - 55, 450), 
         scale(3), 
         rotate(270),
         fixed(),
+        //calcul du frame à utiliser selon les hp du boss et leur mise à jour 
         {
             max: BOSS_HEALTH,
             set(hp) {
-                // Calculate the frame based on the boss's health
-                // Assuming BOSS_HEALTH is 12 or less, each HP corresponds to one frame
-                // If BOSS_HEALTH is more than 12, adjust the calculation accordingly
                 this.frame = Math.min(11, Math.max(0, 11 - Math.floor((hp / this.max) * 11))); 
-                // frame 0 to 11 for 12 frames
                 this.flash = true;
             },
         },
@@ -1135,13 +1075,13 @@ scene("level0", ()=>{
         rotate(90)
     ])
 
-    // Flash effect
+    // Effet dans le insaneMode 
     bossHealthbar.onUpdate(() => {
         if (bossHealthbar.flash) {
             bossHealthbar.color = rgb(255, 255, 255);
             bossHealthbar.flash = false;
         } else {
-            bossHealthbar.color = rgb(255, 255, 255); // Assuming the health bar sprite does not need color change
+            bossHealthbar.color = rgb(255, 255, 255); 
         }
     });
 
@@ -1155,6 +1095,7 @@ scene("level0", ()=>{
         pos(24, height() - 24),
     ])
 
+    //Ajout des coeurs pour les hp du player 
     const hearts = []
     for (let i=0; i<10; i++) {
         const heart = add ([
@@ -1167,20 +1108,21 @@ scene("level0", ()=>{
         hearts.push(heart);
     }
 
+    //Mise à jour des hp du player avec les coeurs 
     function updatePlayerHealth(hp) {
         const heartsToShow = Math.ceil(hp / 10);
         hearts.forEach((heart, index) => {
             heart.hidden = index >= heartsToShow;
         });
     }
-    
-    // Initial call to set the full health display
+
     updatePlayerHealth(PLAYER_HEALTH);
 
+    //Définition des actions quand le player fait collision avec les différents objets 
     player.onCollide("enemy", (e) => {
         destroy(e);
         addExplode(player.pos, 1, 24, 1);
-        player.hurt(10); // Assume 10 HP per hit for simplicity
+        player.hurt(10); 
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
     });
@@ -1197,7 +1139,7 @@ scene("level0", ()=>{
     
     player.onCollide("ally", (e) => {
         destroy(e);
-        player.heal(10); // Assume 10 HP per heal for simplicity
+        player.heal(10); 
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
         addExplode(player.pos, 1, 24, 1);
@@ -1210,14 +1152,13 @@ scene("level0", ()=>{
         updatePlayerHealth(player.hp());
     });
 
-
-
+    //Appel des fonctions
     spawnTrash()
     spawnAlly()
 
 
-    //partie du code pour mettre des trucs sur le deuxième canvas 
-        const secondCtx = secondCanvas.getContext('2d');
+    //Partie du code qui gère l'ajout et la mise à jour du deuxième écran sur la droite avec les paysages qui évoluent selon les hp du player 
+    const secondCtx = secondCanvas.getContext('2d');
 
     let backgroundIndex = 0
     backgroundIndex == hearts
@@ -1239,9 +1180,9 @@ scene("level0", ()=>{
             };
         }
     };
-    function update() {
-        // Update the backgroundIndex based on player health
 
+    //Mise à jour du deuxièmeCanvas selon les hp du player avec l'utilisation d'un backgroundIndex 
+    function update() {
         for (let i = 0; i < healthPoints.length; i++) {
             if (player.hp() > healthPoints[i]) {
                 backgroundIndex = i;
@@ -1249,20 +1190,13 @@ scene("level0", ()=>{
             }
             
         }
-
-        // Update the second canvas based on the current backgroundIndex
         updateSecondCanvas();
     }
-
-    
-    // Add the update function to Kaboom's game loop
     onUpdate(update);
     
 });
 
 
-
-//Pour utiliser duex écrans en même temps sur une scène, utiliser fonction multiboom (cf. doc kaboom)
 scene("level1", ()=>{
 
     const secondCanvas = createCanvas(640,480);
@@ -1297,7 +1231,6 @@ scene("level1", ()=>{
 
     let insaneMode = false
 
-    //fonction qui est utilisé dans la fonction addExplode 
     function grow(rate) {
         return {
             update() {
@@ -1378,13 +1311,10 @@ scene("level1", ()=>{
     })
 
     //ajouter le joueur 
-
     let animEnCours = false;
 
     const player = add([
-        sprite("player"/* {
-            anim: "marcheArriere",
-        }*/),
+        sprite("player"),
         area(),
         pos(width() / 2, height() - 64),
         anchor("center"),
@@ -1431,15 +1361,12 @@ scene("level1", ()=>{
 
     onKeyPress("up", () => {
         insaneMode = true
-        //music.speed = 2
     })
 
     onKeyRelease("up", () => {
         insaneMode = false
-        //music.speed = 1
     })
 
-    //fonction qui ajoute trucs blancs et shake lors du collide entre plusieurs trucs, qui est appelé plusieurs fois ensuite dans le code 
     function addExplode(p, n, rad, size) {
         for (let i = 0; i < n; i++) {
             wait(rand(n * 0.1), () => {
@@ -1470,7 +1397,6 @@ scene("level1", ()=>{
             outline(4),
             move(UP, BULLET_SPEED),
             offscreen({ destroy: true }),
-            // strings here means a tag
             "bullet",
         ])
     }
@@ -1483,11 +1409,6 @@ scene("level1", ()=>{
 
     onKeyPress("space", () => {
         spawnBullet(player.pos.add(6, 0))
-        //spawnBullet(player.pos.sub(16, 0))
-        //play("shoot", {
-            //volume: 0.3,
-            //detune: rand(-1200, 1200),
-        //})
         let shoot = play("hurtEnemy", {
             volume:0.85
         })
@@ -1514,11 +1435,9 @@ scene("level1", ()=>{
         wait(SPAWN_INTERVAL, spawnAlly)
     }
 
-    //fonction qui ajoute les trucs qui tombent du ciel, qui sont appelés Trash dans le code 
-    let offscreenTrashCount = 0;  // Counter for offscreen trash
+    let offscreenTrashCount = 0;  
 
     function spawnTrash() {
-        // Ensure there are always MAX_TRASH trash objects
         while (get("trash").length < MAX_TRASH) {
             const name = choose(objsTrash1.filter(n => n != bossName));
             add([
@@ -1531,7 +1450,7 @@ scene("level1", ()=>{
                 "trash",
                 "enemy",
                 { speed: rand(TRASH_SPEED * 0.5, TRASH_SPEED * 1.5) },
-                { offscreenChecked: false }  // Custom property to track if offscreen check has been done
+                { offscreenChecked: false } 
             ]);
         }
     
@@ -1541,8 +1460,8 @@ scene("level1", ()=>{
         get("trash").forEach((t) => {
             if (t.pos.y > height() && !t.offscreenChecked) {
                 offscreenTrashCount++;
-                t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
-                destroy(t);  // Destroy the trash object
+                t.offscreenChecked = true;  
+                destroy(t);  
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
                 
             }
@@ -1571,7 +1490,6 @@ scene("level1", ()=>{
     on("death", "enemy", (e) => {
         destroy(e)
         shake(2)
-        //addKaboom(e.pos)
     })
 
     on("death", "ally", (e) => {
@@ -1660,7 +1578,6 @@ scene("level1", ()=>{
     })
 
     boss.onDeath(() => {
-        //music.stop()
         go("level2", {
             time: timer.time,
             boss: bossName,
@@ -1670,7 +1587,7 @@ scene("level1", ()=>{
     })
 
     const bossHealthbar = add([
-        sprite("healthBar", { frame: 0 }), // Start with the first frame (full health)
+        sprite("healthBar", { frame: 0 }), 
         pos(width() - 55, 450), 
         scale(3), 
         rotate(270),
@@ -1678,11 +1595,7 @@ scene("level1", ()=>{
         {
             max: BOSS_HEALTH,
             set(hp) {
-                // Calculate the frame based on the boss's health
-                // Assuming BOSS_HEALTH is 12 or less, each HP corresponds to one frame
-                // If BOSS_HEALTH is more than 12, adjust the calculation accordingly
                 this.frame = Math.min(11, Math.max(0, 11 - Math.floor((hp / this.max) * 11))); 
-                // frame 0 to 11 for 12 frames
                 this.flash = true;
             },
         },
@@ -1726,14 +1639,13 @@ scene("level1", ()=>{
             heart.hidden = index >= heartsToShow;
         });
     }
-    
-    // Initial call to set the full health display
+   
     updatePlayerHealth(PLAYER_HEALTH);
 
     player.onCollide("enemy", (e) => {
         destroy(e);
         addExplode(player.pos, 1, 24, 1);
-        player.hurt(10); // Assume 10 HP per hit for simplicity
+        player.hurt(10); 
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
     });
@@ -1767,7 +1679,7 @@ scene("level1", ()=>{
 
     spawnAlly();
 
-    //partie du code pour mettre des trucs sur le deuxième canvas 
+    //Partie du code pour mettre des trucs sur le deuxième canvas 
     const secondCtx = secondCanvas.getContext('2d');
 
     let backgroundIndex = 0
@@ -1792,7 +1704,6 @@ scene("level1", ()=>{
     };
 
     function update() {
-        // Update the backgroundIndex based on player health
         for (let i = 0; i < healthPoints.length; i++) {
             if (player.hp() > healthPoints[i]) {
                 backgroundIndex = i;
@@ -1800,12 +1711,10 @@ scene("level1", ()=>{
             }
         }
 
-        // Update the second canvas based on the current backgroundIndex
         updateSecondCanvas();
 
     };
 
-    // Add the update function to Kaboom's game loop
     onUpdate(update);
 });
 
@@ -1845,11 +1754,6 @@ scene("level2", ()=>{
 
     let insaneMode = false
 
-    //const music = play("OtherworldlyFoe")
-
-    //volume(0.5)
-
-    //fonction qui est utilisé dans la fonction addExplode 
     function grow(rate) {
         return {
             update() {
@@ -1930,13 +1834,10 @@ scene("level2", ()=>{
     })
 
     //ajouter le joueur 
-
     let animEnCours = false;
 
     const player = add([
-        sprite("player"/* {
-            anim: "marcheArriere",
-        }*/),
+        sprite("player"),
         area(),
         pos(width() / 2, height() - 64),
         anchor("center"),
@@ -1983,15 +1884,12 @@ scene("level2", ()=>{
 
     onKeyPress("up", () => {
         insaneMode = true
-        //music.speed = 2
     })
 
     onKeyRelease("up", () => {
         insaneMode = false
-        //music.speed = 1
     })
 
-    //fonction qui ajoute trucs blancs et shake lors du collide entre plusieurs trucs, qui est appelé plusieurs fois ensuite dans le code 
     function addExplode(p, n, rad, size) {
         for (let i = 0; i < n; i++) {
             wait(rand(n * 0.1), () => {
@@ -2022,7 +1920,6 @@ scene("level2", ()=>{
             outline(4),
             move(UP, BULLET_SPEED),
             offscreen({ destroy: true }),
-            // strings here means a tag
             "bullet",
         ])
     }
@@ -2035,11 +1932,6 @@ scene("level2", ()=>{
 
     onKeyPress("space", () => {
         spawnBullet(player.pos.add(6, 0))
-        //spawnBullet(player.pos.sub(16, 0))
-        //play("shoot", {
-            //volume: 0.3,
-            //detune: rand(-1200, 1200),
-        //})
         let shoot = play("hurtEnemy", {
             volume:0.85
         })
@@ -2047,11 +1939,9 @@ scene("level2", ()=>{
 
     const SPAWN_INTERVAL = insaneMode ? 0.1 : 0.3;
 
-    //fonction qui ajoute les trucs qui tombent du ciel, qui sont appelés Trash dans le code 
-    let offscreenTrashCount = 0;  // Counter for offscreen trash
+    let offscreenTrashCount = 0;  
 
     function spawnTrash() {
-        // Ensure there are always MAX_TRASH trash objects
         while (get("trash").length < MAX_TRASH) {
             const name = choose(objsTrash2.filter(n => n != bossName));
             add([
@@ -2064,7 +1954,7 @@ scene("level2", ()=>{
                 "trash",
                 "enemy",
                 { speed: rand(TRASH_SPEED * 0.5, TRASH_SPEED * 1.5) },
-                { offscreenChecked: false }  // Custom property to track if offscreen check has been done
+                { offscreenChecked: false }  
             ]);
         }
     
@@ -2074,8 +1964,8 @@ scene("level2", ()=>{
         get("trash").forEach((t) => {
             if (t.pos.y > height() && !t.offscreenChecked) {
                 offscreenTrashCount++;
-                t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
-                destroy(t);  // Destroy the trash object
+                t.offscreenChecked = true;  
+                destroy(t);  
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
                 
             }
@@ -2100,6 +1990,7 @@ scene("level2", ()=>{
         },
     ])
 
+    //Ajout d'un objet positif de droite à gauche sous le boss (qui prend la place du spawnAlly des niveaux 0 et 1)
     const pietonAlly = add([
         sprite("pieton"),
         area(),
@@ -2130,7 +2021,6 @@ scene("level2", ()=>{
     on("death", "enemy", (e) => {
         destroy(e)
         shake(2)
-        //addKaboom(e.pos)
     })
 
     on("hurt", "enemy", (e) => {
@@ -2221,19 +2111,15 @@ scene("level2", ()=>{
     })
 
     const bossHealthbar = add([
-        sprite("healthBar", { frame: 0 }), // Start with the first frame (full health)
-        pos(width() - 55, 450), // Adjust position as needed
+        sprite("healthBar", { frame: 0 }), 
+        pos(width() - 55, 450), 
         scale(3), 
         rotate(270),
         fixed(),
         {
             max: BOSS_HEALTH,
             set(hp) {
-                // Calculate the frame based on the boss's health
-                // Assuming BOSS_HEALTH is 12 or less, each HP corresponds to one frame
-                // If BOSS_HEALTH is more than 12, adjust the calculation accordingly
                 this.frame = Math.min(11, Math.max(0, 11 - Math.floor((hp / this.max) * 11))); 
-                // frame 0 to 11 for 12 frames
                 this.flash = true;
             },
         },
@@ -2278,7 +2164,6 @@ scene("level2", ()=>{
         });
     }
     
-    // Initial call to set the full health display
     updatePlayerHealth(PLAYER_HEALTH);
 
     player.onCollide("enemy", (e) => {
@@ -2316,7 +2201,7 @@ scene("level2", ()=>{
 
     spawnTrash()
 
-    //partie du code pour mettre des trucs sur le deuxième canvas 
+    //Partie du code pour mettre des trucs sur le deuxième canvas 
     const secondCtx = secondCanvas.getContext('2d');
 
     let backgroundIndex = 0
@@ -2341,7 +2226,6 @@ scene("level2", ()=>{
     };
 
     function update() {
-        // Update the backgroundIndex based on player health
         for (let i = 0; i < healthPoints.length; i++) {
             if (player.hp() > healthPoints[i]) {
                 backgroundIndex = i;
@@ -2349,9 +2233,7 @@ scene("level2", ()=>{
             }
         }
 
-        // Update the second canvas based on the current backgroundIndex
         updateSecondCanvas();
-
     }
 
     onUpdate(update);
@@ -2480,9 +2362,7 @@ scene("level3", () => {
     let animEnCours = false;
 
     const player = add([
-        sprite("player"/* {
-            anim: "marcheArriere",
-        }*/),
+        sprite("player"),
         area(),
         pos(width() / 2, height() - 64),
         anchor("center"),
@@ -2529,15 +2409,12 @@ scene("level3", () => {
 
     onKeyPress("up", () => {
         insaneMode = true
-        //music.speed = 2
     })
 
     onKeyRelease("up", () => {
         insaneMode = false
-        //music.speed = 1
     })
 
-    //fonction qui ajoute trucs blancs et shake lors du collide entre plusieurs trucs, qui est appelé plusieurs fois ensuite dans le code 
     function addExplode(p, n, rad, size) {
         for (let i = 0; i < n; i++) {
             wait(rand(n * 0.1), () => {
@@ -2568,7 +2445,6 @@ scene("level3", () => {
             outline(4),
             move(UP, BULLET_SPEED),
             offscreen({ destroy: true }),
-            // strings here means a tag
             "bullet",
         ])
     }
@@ -2581,11 +2457,6 @@ scene("level3", () => {
 
     onKeyPress("space", () => {
         spawnBullet(player.pos.add(6, 0))
-        //spawnBullet(player.pos.sub(16, 0))
-        //play("shoot", {
-            //volume: 0.3,
-            //detune: rand(-1200, 1200),
-        //})
         let shoot = play("hurtEnemy", {
             volume:0.85
         })
@@ -2593,7 +2464,6 @@ scene("level3", () => {
 
     const SPAWN_INTERVAL = insaneMode ? 0.1 : 0.3;
 
-    //fonction qui ajoute les trucs qui tombent du ciel, qui sont appelés Trash dans le code 
     let offscreenTrashCount = 0;  
 
     function spawnTrash() {
@@ -2609,7 +2479,7 @@ scene("level3", () => {
                 "trash",
                 "enemy",
                 { speed: rand(TRASH_SPEED * 0.5, TRASH_SPEED * 1.5) },
-                { offscreenChecked: false }  // Custom property to track if offscreen check has been done
+                { offscreenChecked: false }  
             ]);
         }
     
@@ -2619,8 +2489,8 @@ scene("level3", () => {
         get("trash").forEach((t) => {
             if (t.pos.y > height() && !t.offscreenChecked) {
                 offscreenTrashCount++;
-                t.offscreenChecked = true;  // Mark as checked to avoid multiple counts
-                destroy(t);  // Destroy the trash object
+                t.offscreenChecked = true;  
+                destroy(t);  
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
                 
             }
@@ -2646,6 +2516,7 @@ scene("level3", () => {
         },
     ])
 
+    //Ajout d'un élément de mobilité positif qui bouge de droite à gauche sous le boss (remplace le spawnAlly des niveaux 0 et 1)
     const trainAlly = add([
         sprite("train"),
         area(),
@@ -2680,12 +2551,12 @@ scene("level3", () => {
 
             //controle si le train a deja traversé l'écran 3 fois, et le faire disparaitre
             if (trainAlly.crossCount >= CROSS_LIMIT) {
-                trainAlly.hidden = true; // Hide the train
-                trainAlly.crossCount = 0 //reset the cross counter 
+                trainAlly.hidden = true; 
+                trainAlly.crossCount = 0 
                 wait(DISAPPEAR_DURATION, () => {
-                    trainAlly.hidden = false; // Reappear the train
-                    trainAlly.pos.x = width() / 2; // Reset position (optional)
-                    trainAlly.dir = -1 //start moving left again
+                    trainAlly.hidden = false; 
+                    trainAlly.pos.x = width() / 2; 
+                    trainAlly.dir = -1 
                     trainAlly.flipX = false
                 });
             }
@@ -2696,7 +2567,6 @@ scene("level3", () => {
     on("death", "enemy", (e) => {
         destroy(e)
         shake(2)
-        //addKaboom(e.pos)
     })
 
     on("hurt", "enemy", (e) => {
@@ -2788,19 +2658,15 @@ scene("level3", () => {
     })
 
     const bossHealthbar = add([
-        sprite("healthBar", { frame: 0 }), // Start with the first frame (full health)
-        pos(width() - 55, 450), // Adjust position as needed
+        sprite("healthBar", { frame: 0 }), 
+        pos(width() - 55, 450), 
         scale(3), 
         rotate(270),
         fixed(),
         {
             max: BOSS_HEALTH,
             set(hp) {
-                // Calculate the frame based on the boss's health
-                // Assuming BOSS_HEALTH is 12 or less, each HP corresponds to one frame
-                // If BOSS_HEALTH is more than 12, adjust the calculation accordingly
-                this.frame = Math.min(11, Math.max(0, 11 - Math.floor((hp / this.max) * 11))); 
-                // frame 0 to 11 for 12 frames
+                this.frame = Math.min(11, Math.max(0, 11 - Math.floor((hp / this.max) * 11)));
                 this.flash = true;
             },
         },
@@ -2845,13 +2711,12 @@ scene("level3", () => {
         });
     }
     
-    // Initial call to set the full health display
     updatePlayerHealth(PLAYER_HEALTH);
 
     player.onCollide("enemy", (e) => {
         destroy(e);
         addExplode(player.pos, 1, 24, 1);
-        player.hurt(10); // Assume 10 HP per hit for simplicity
+        player.hurt(10); 
         e.hurt(insaneMode ? 10 : 1);
         wait(1, () => {});
     });
@@ -2883,7 +2748,7 @@ scene("level3", () => {
 
     spawnTrash()
 
-    //partie du code pour mettre des trucs sur le deuxième canvas 
+    //Partie du code pour mettre des trucs sur le deuxième canvas 
     const secondCtx = secondCanvas.getContext('2d');
 
     let backgroundIndex = 0
@@ -2908,7 +2773,6 @@ scene("level3", () => {
     };
 
     function update() {
-        // Update the backgroundIndex based on player health
         for (let i = 0; i < healthPoints.length; i++) {
             if (player.hp() > healthPoints[i]) {
                 backgroundIndex = i;
@@ -2916,7 +2780,6 @@ scene("level3", () => {
             }
         }
 
-        // Update the second canvas based on the current backgroundIndex
         updateSecondCanvas();
 
     }
@@ -2938,7 +2801,6 @@ scene("win", ()=>{
 
     const terreTournante = add([
         sprite("terre", {
-            //comportement de l'objet terre, qui doit avoir le sprite avec caractéristique de l'animation "tourne"
             anim: "tourne",
             width: 300,
             height: 300,

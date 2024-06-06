@@ -433,6 +433,7 @@ scene("contexte", ()=>{
         
     ])
 
+    //code corrigé par chatGPT 
     onKeyPress("space", () => {
         // Bouger d'un dialogue à l'autre et quand ils sont finis, changer de scène 
         if (curDialog < dialogues.length - 1) {
@@ -526,7 +527,9 @@ scene("explication", ()=>{
         scale(5.5),
     ])
 
+    //code corrigé par chatGPT 
     onKeyPress("space", () => {
+        //si il y a encore des dialogues, "space" fait avancer dans les dialogues
         if (curDialog < dialogues1.length - 1) {
             curDialog++
             updateDialog()
@@ -534,6 +537,7 @@ scene("explication", ()=>{
             const spaceSound = play("spaceSound", {
                 volume:1.4
             })
+            //quand il n'y a plus de dialogues, passer alors au niveau 0
         } else {
             go("level0")
             musicContexte.stop()
@@ -908,8 +912,10 @@ scene("level0", ()=>{
     
         wait(SPAWN_INTERVAL, spawnTrash);
     };
-    //Boucle qui se charge de mettre à jour combien d'objets négatifs ont été laissé passé et de les détruire 
+
+    //code corrigé par chatGPT : boucle qui se charge de mettre à jour combien d'objets négatifs ont été laissé passer et de les détruire 
     loop(1, () => {
+        //pour chaque objet avec le tag "trash", récuperer sa position: si en dehors de l'écran, détruire l'objet et mettre à jour la variable offscreenTrashCount 
         get("trash").forEach((t) => {
             if (t.pos.y > height() && !t.offscreenChecked) {
                 offscreenTrashCount++;
@@ -918,17 +924,11 @@ scene("level0", ()=>{
                 console.log("Trash went offscreen. Current count:", offscreenTrashCount);
             }
         });
-        //Déplacer cette condition en dessous permet de faire marcher le jeu
+        //Déplacer cette condition en dessous permet de faire marcher le jeu: si le offscreenTrashCount est plus que 1, aller à la scène gameOver et enlever le deuxième canvas 
         if (offscreenTrashCount > 1) {
             go("gameOver");
             musicLevel0.stop();
-            // Apparemment le problème est que l'élément enlevé n'est pas le bon
-            // Solutions testées mais qui ne marchent pas : 
             gameContainer.removeChild(secondCanvas);
-            //gameContainer.removeChild(gameContainer.lastElementChild)
-            //secondCanvas.parentNode.removeChild(secondCanvas)
-            // Solution qui a l'air de marcher : 
-            //gameContainer.removeChild(gameContainer.childNodes[1])
         }
     });
 
@@ -1021,6 +1021,7 @@ scene("level0", ()=>{
         }
     })
 
+    //gestion des déplacements du boss de droite à gauche sur l'écran et flipper le sprite selon sa direction 
     boss.onUpdate((p) => {
         boss.move(BOSS_SPEED * boss.dir * (insaneMode ? 3 : 1), 0)
         if (boss.dir === 1 && boss.pos.x >= width() - 20) {
@@ -1038,6 +1039,7 @@ scene("level0", ()=>{
         bossHealthbar.set(boss.hp())
     })
 
+    //à la mort du boss (quand il n'a plus de hp), passer à la scène successive et enlever le deuxième canvas 
     boss.onDeath(() => {
         go("level1", {
             time: timer.time,
@@ -1048,14 +1050,14 @@ scene("level0", ()=>{
         musicLevel0.stop()
     })
 
-    //Ajout de la barre de vie du boss et lien avec ses points de vie, 
+    //Ajout de la barre de vie du boss et faire le lien avec ses points de vie
     const bossHealthbar = add([
         sprite("healthBar", { frame: 0 }), 
         pos(width() - 55, 450), 
         scale(3), 
         rotate(270),
         fixed(),
-        //calcul du frame à utiliser selon les hp du boss et leur mise à jour 
+        //corrigé par chatGPT: calcul du frame à utiliser selon les hp du boss et leur mise à jour 
         {
             max: BOSS_HEALTH,
             set(hp) {
@@ -1095,7 +1097,7 @@ scene("level0", ()=>{
         pos(24, height() - 24),
     ])
 
-    //Ajout des coeurs pour les hp du player 
+    //code corrigé par chatGPT: ajout des coeurs pour les hp du player. Hearts est un tableau qui vient rempli par une boucle qui ajoute les coeurs 
     const hearts = []
     for (let i=0; i<10; i++) {
         const heart = add ([
@@ -1108,7 +1110,7 @@ scene("level0", ()=>{
         hearts.push(heart);
     }
 
-    //Mise à jour des hp du player avec les coeurs 
+    //Code corrigé par chatGPT: mise à jour du tableau avec les coeurs, donc les hp, du player, selon la même logique qu'avec la barre hp du boss
     function updatePlayerHealth(hp) {
         const heartsToShow = Math.ceil(hp / 10);
         hearts.forEach((heart, index) => {
@@ -1157,9 +1159,10 @@ scene("level0", ()=>{
     spawnAlly()
 
 
-    //Partie du code qui gère l'ajout et la mise à jour du deuxième écran sur la droite avec les paysages qui évoluent selon les hp du player 
+    //Code corrigé par chatGPT: Partie du code qui gère l'ajout et la mise à jour du deuxième écran sur la droite avec les paysages qui évoluent selon les hp du player. Il n'y a pas de kaboom dans ce canvas, mais que du js. 
     const secondCtx = secondCanvas.getContext('2d');
 
+    //définir l'évolution du backgroundIndex selon le tableau coeur connecté aux hp du player 
     let backgroundIndex = 0
     backgroundIndex == hearts
 
@@ -1169,6 +1172,7 @@ scene("level0", ()=>{
         return img;
     });
 
+    //Positionnement de l'image dans le deuxième canvas et mise à jour 
     function updateSecondCanvas() {
         secondCtx.clearRect(0, 0, secondCanvas.width, secondCanvas.height);
         const backgroundImage = backgroundImages[backgroundIndex];
@@ -2006,6 +2010,7 @@ scene("level2", ()=>{
 
     pietonAlly.play("marche")
 
+    //Gérer les déplacements du pieton de gauche à droite en dessous du boss 
     pietonAlly.onUpdate((p) => {
         pietonAlly.move(ALLY_SPEED * pietonAlly.dir * (insaneMode ? 3 : 1), 0)
         if (pietonAlly.dir === 1 && pietonAlly.pos.x >= width() - 20) {
@@ -2531,6 +2536,7 @@ scene("level3", () => {
         },
     ]);
 
+    //Gérer les déplacements du train de gauche à droite (et le flip selon sa direction) en dessous du boss
     trainAlly.onUpdate((p) => {
         if (!trainAlly.hidden) {
             trainAlly.move(ALLY_SPEED * trainAlly.dir * (insaneMode ? 3 : 1), 0)
@@ -2549,7 +2555,7 @@ scene("level3", () => {
                 trainAlly.crossCount++
             }
 
-            //controle si le train a deja traversé l'écran 3 fois, et le faire disparaitre
+            //code corrigé par chatGPT: controle si le train a deja traversé l'écran 3 fois avec la variable CROSS_LIMIT, et le faire disparaitre pour un certain temps avec la variable DISAPPEAR_DURATION, pour le faire réapparaitre ensuite
             if (trainAlly.crossCount >= CROSS_LIMIT) {
                 trainAlly.hidden = true; 
                 trainAlly.crossCount = 0 
